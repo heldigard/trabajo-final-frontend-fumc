@@ -133,28 +133,21 @@ git clone https://github.com/tu-usuario/trabajo-final-frontend-fumc.git
 # (Luego descomprime en una carpeta de tu elección)
 ```
 
-### Paso 2: Configurar Variables de Entorno
+### Paso 2: Configurar tu Grupo
 
-```bash
-# Copia el archivo de ejemplo
-copy .env.example .env
+Abre el archivo `js/config.js` y cambia el nombre de tu grupo:
 
-# Edita .env con tus datos
-# IMPORTANTE: Cambia GRUPO_ESTUDIANTES por tu grupo asignado
+```javascript
+// 📍 LÍNEA 22 de js/config.js
+GRUPO_ESTUDIANTES: 'GRUPO_1',  // ⚠️ CAMBIAR POR TU GRUPO
 ```
 
-**Contenido del archivo `.env`:**
-
-```env
-# URL del backend FastAPI
-API_BASE_URL=http://localhost:8000/api/v1
-
-# CAMBIA ESTO por el nombre de tu grupo
-# Ejemplos: "Grupo_1", "Grupo_A", "Equipo_DataAnalytics"
-GRUPO_ESTUDIANTES=TuGrupoAqui
+**Cambiar por:**
+```javascript
+GRUPO_ESTUDIANTES: 'GRUPO_3',  // Si eres del grupo 3
 ```
 
-### Paso 3: Verificar que el Backend esté Corriendo
+### Paso 2: Verificar que el Backend esté Corriendo
 
 ```bash
 # El backend debe estar ejecutándose en:
@@ -164,7 +157,7 @@ GRUPO_ESTUDIANTES=TuGrupoAqui
 # http://localhost:8000/docs
 ```
 
-### Paso 4: Abrir el Frontend
+### Paso 3: Abrir el Frontend
 
 **Opción A - Con Live Server (Recomendado):**
 
@@ -189,7 +182,7 @@ python -m http.server 8080
 # (Puede tener problemas con CORS)
 ```
 
-### Paso 5: Probar la Conexión
+### Paso 4: Probar la Conexión
 
 1. Abre el frontend en tu navegador
 2. Ve al Dashboard (página principal)
@@ -197,7 +190,7 @@ python -m http.server 8080
 4. Debería decir: "🟢 Conectado al Backend"
 5. Si dice "🔴 Sin Conexión", verifica que el backend esté corriendo
 
-### Paso 6: Crear Datos de Prueba
+### Paso 5: Crear Datos de Prueba
 
 ```javascript
 // Abre la consola del navegador (F12)
@@ -224,15 +217,14 @@ fetch('http://localhost:8000/api/v1/productos', {
 trabajo-final-frontend-fumc/
 │
 ├── index.html              # Dashboard principal
-├── .env.example           # Plantilla de configuración
+├── GUIA_ESTUDIANTES.md     # 📘 Guía completa para estudiantes
 ├── README.md             # Esta documentación
-├── MEMORIA_PROYECTO.md   # Memoria técnica completa
 │
 ├── css/
 │   └── styles.css        # Estilos globales (489 líneas)
 │
 ├── js/
-│   ├── config.js         # Configuración centralizada (135 líneas)
+│   ├── config.js         # Configuración centralizada (108 líneas)
 │   │
 │   ├── utils/            # ✨ Utilidades reutilizables (426 líneas)
 │   │   ├── formatters.js  # Formato de precios, fechas, textos (129 líneas)
@@ -240,13 +232,13 @@ trabajo-final-frontend-fumc/
 │   │   └── ui.js          # Alertas, spinners, badges (154 líneas)
 │   │
 │   ├── api/              # Servicios de comunicación con backend (1,085 líneas)
-│   │   ├── productos.js   # 8 funciones CRUD (362 líneas)
-│   │   ├── clientes.js    # 9 funciones CRUD (360 líneas)
-│   │   └── auditoria.js   # 5 funciones de consulta (363 líneas)
+│   │   ├── productos.js   # 8 funciones CRUD (295 líneas)
+│   │   ├── clientes.js    # 9 funciones CRUD (351 líneas)
+│   │   └── auditoria.js   # 5 funciones de consulta (297 líneas)
 │   │
 │   ├── components/       # Componentes reutilizables (469 líneas)
-│   │   ├── navbar.js      # Barra de navegación (151 líneas)
-│   │   └── modal.js       # Sistema de modales (318 líneas)
+│   │   ├── navbar.js      # Barra de navegación (145 líneas)
+│   │   └── modal.js       # Sistema de modales (263 líneas)
 │   │
 │   └── pages/            # Lógica de cada página (934 líneas)
 │       ├── productos.js   # CRUD productos + RETOS 3, 4, 6 (476 líneas)
@@ -260,9 +252,9 @@ trabajo-final-frontend-fumc/
 
 📊 ESTADÍSTICAS DEL PROYECTO:
 - Total archivos JS: 12 archivos
-- Total líneas de código JS: ~3,049 líneas
-- Promedio por archivo: ~254 líneas (fácil de leer)
-- Total retos: 6 retos esenciales
+- Total líneas de código JS: ~2,819 líneas
+- Promedio por archivo: ~235 líneas (fácil de leer)
+- Total retos: 7 retos esenciales
 - Páginas completas: 4 (Dashboard + 3 CRUD)
 ```
 
@@ -357,7 +349,7 @@ Similar a productos, con campos específicos:
 
 ## 🎯 Retos para Estudiantes (SIMPLIFICADOS)
 
-Este proyecto incluye **6 retos** diseñados para completarse en **3 clases**. Cada reto tiene **instrucciones detalladas insertadas directamente en el código** con múltiples pistas y ejemplos.
+Este proyecto incluye **7 retos** diseñados para completarse en **3 clases**. Cada reto tiene **instrucciones detalladas insertadas directamente en el código** con múltiples pistas y ejemplos.
 
 ### � Ubicación Exacta de los Retos
 
@@ -371,9 +363,10 @@ Todos los retos están insertados como **comentarios detallados** en el código 
 | 4 | Buscar en descripción | `js/pages/productos.js` | ~163 | 25 min | ⭐⭐ Media | 20 pts |
 | 5 | Contador de caracteres | `js/pages/clientes.js` | ~258 | 30 min | ⭐⭐ Media | 20 pts |
 | 6 | Exportar a CSV | `js/pages/productos.js` + `pages/productos.html` | ~890 + ~65 | 45 min | ⭐⭐⭐ Difícil | 20 pts |
+| 7 | Agregar firma en POST/PUT | `js/api/productos.js` | ~208 y ~320 | 30 min | ⭐⭐ Medio | 20 pts |
 
 **Total tiempo estimado:** 2.5-3 horas (perfectamente posible en 3 clases)  
-**Total puntos:** 100
+**Total puntos:** 120
 
 ---
 
@@ -506,6 +499,41 @@ Todos los retos están insertados como **comentarios detallados** en el código 
 
 ---
 
+#### 🎯 Reto 7: Agregar Firma en POST/PUT (⭐⭐ Medio - 20 pts)
+**Objetivo:** Aprender a **modificar datos ANTES de enviarlos al backend**.
+
+**Ubicación:**
+- **POST (Crear):** `js/api/productos.js` línea **~208**
+- **PUT (Editar):** `js/api/productos.js` línea **~320**
+
+**Qué debes hacer:**
+1. Buscar los comentarios `🎯 RETO 7` en ambas funciones
+2. Crear una copia del objeto producto usando spread operator (`...`)
+3. Modificar la descripción agregando firma con tu grupo
+4. Usar el objeto modificado en el `fetch()`
+
+**Ejemplo esperado:**
+```
+Descripción original: "Laptop HP"
+Después de crear: "Laptop HP [Creado por GRUPO_3]"
+Después de editar: "Laptop HP [Creado por GRUPO_3] [Editado por GRUPO_3]"
+```
+
+**Pistas incluidas:**
+- Explicación completa del spread operator (`...`)
+- Template literals para concatenar strings
+- Validación de longitud máxima (250 caracteres)
+- Código completo comentado como referencia
+- 40+ líneas de instrucciones detalladas
+
+**Criterios de aceptación:**
+- Las peticiones POST incluyen `[Creado por GRUPO_X]`
+- Las peticiones PUT incluyen `[Editado por GRUPO_X]`
+- La descripción no excede 250 caracteres
+- Se puede verificar en Network tab de DevTools
+
+---
+
 ### 🎓 Cómo Trabajar los Retos
 
 #### En Clase 1:
@@ -569,13 +597,21 @@ Todos los retos están insertados como **comentarios detallados** en el código 
 
 ### ✅ Evaluación
 
-**Mínimo para aprobar:** 3 retos (cualquier combinación que sume ≥18 pts)
+**Mínimo para aprobar:** 4 retos (cualquier combinación que sume ≥50 pts)
 
-**Ejemplos:**
-- Retos 1 + 2 + 3 = 15 pts ❌ (falta 1 más)
-- Retos 1 + 2 + 4 = 18 pts ✅ (aprobado)
-- Retos 1 + 2 + 3 + 5 = 23 pts ✅ (sobresaliente)
-- Todos los retos = 41 pts ✅✅ (excelencia)
+**Distribución por dificultad:**
+- **Retos Fáciles** (⭐): 10-15 pts cada uno
+- **Retos Medios** (⭐⭐): 20 pts cada uno
+- **Retos Difíciles** (⭐⭐⭐): 20 pts cada uno
+
+**Ejemplos de combinaciones válidas:**
+- Retos 1 + 2 + 3 + 4 = 15 + 10 + 15 + 20 = **60 pts** ✅ (aprobado básico)
+- Retos 1 + 2 + 3 + 5 = 15 + 10 + 15 + 20 = **60 pts** ✅ (aprobado básico)
+- Retos 1 + 3 + 4 + 5 = 15 + 15 + 20 + 20 = **70 pts** ✅ (aprobado sólido)
+- Retos 4 + 5 + 6 + 7 = 20 + 20 + 20 + 20 = **80 pts** ✅ (aprobado avanzado)
+- Todos los retos = **120 pts** ✅✅ (excelencia total)
+
+**Nota:** Los retos 1, 2 y 3 son obligatorios para demostrar conocimientos básicos. Los retos 4-7 permiten demostrar habilidades avanzadas.
 
 **Ver GUIA_PROFESOR.md para rúbrica completa.**
 
