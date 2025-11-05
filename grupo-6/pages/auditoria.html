@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditoría - Sistema de Gestión</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Navbar se inyecta aquí -->
+    <div id="navbar-container"></div>
+
+    <main class="container">
+        <header class="page-header fade-in">
+            <div>
+                <h1>📊 Auditoría y Reportes</h1>
+                <p>Historial completo de operaciones del sistema</p>
+            </div>
+        </header>
+
+        <!-- ============================================ -->
+        <!-- SECCIÓN: INSTRUCCIONES -->
+        <!-- ============================================ -->
+        <section class="info-box fade-in" style="animation-delay: 0.1s;">
+            <h3>📋 Instrucciones</h3>
+            <ul>
+                <li><strong>Auditoría automática:</strong> Todas las operaciones (crear, actualizar, eliminar) quedan registradas automáticamente</li>
+                <li><strong>Filtros combinables:</strong> Puedes combinar filtros por grupo, tabla, operación y rango de fechas</li>
+                <li><strong>Comparación de cambios:</strong> Al hacer clic en una fila, puedes ver qué datos cambiaron (antes/después)</li>
+                <li><strong>Exportar reportes:</strong> Genera reportes en CSV para análisis en Excel</li>
+            </ul>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECCIÓN: FILTROS -->
+        <!-- ============================================ -->
+        <section class="filtros-section fade-in" style="animation-delay: 0.2s;">
+            <div class="card">
+                <h3>🔍 Filtros de Búsqueda</h3>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <!-- Filtro por grupo -->
+                    <div class="form-group">
+                        <label class="form-label" for="filtro-grupo">Grupo Estudiantes</label>
+                        <select id="filtro-grupo" class="form-select" onchange="filtrarAuditoria()">
+                            <option value="">Todos los grupos</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por tabla -->
+                    <div class="form-group">
+                        <label class="form-label" for="filtro-tabla">Tabla</label>
+                        <select id="filtro-tabla" class="form-select" onchange="filtrarAuditoria()">
+                            <option value="">Todas las tablas</option>
+                            <option value="productos">Productos</option>
+                            <option value="clientes">Clientes</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por operación -->
+                    <div class="form-group">
+                        <label class="form-label" for="filtro-operacion">Operación</label>
+                        <select id="filtro-operacion" class="form-select" onchange="filtrarAuditoria()">
+                            <option value="">Todas las operaciones</option>
+                            <option value="INSERT">✅ Inserción (CREATE)</option>
+                            <option value="UPDATE">✏️ Actualización (UPDATE)</option>
+                            <option value="DELETE">🗑️ Eliminación (DELETE)</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro por fecha desde -->
+                    <div class="form-group">
+                        <label class="form-label" for="filtro-fecha-desde">Desde</label>
+                        <input
+                            type="date"
+                            id="filtro-fecha-desde"
+                            class="form-input"
+                            onchange="filtrarAuditoria()"
+                        >
+                    </div>
+
+                    <!-- Filtro por fecha hasta -->
+                    <div class="form-group">
+                        <label class="form-label" for="filtro-fecha-hasta">Hasta</label>
+                        <input
+                            type="date"
+                            id="filtro-fecha-hasta"
+                            class="form-input"
+                            onchange="filtrarAuditoria()"
+                        >
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn btn-secondary" onclick="limpiarFiltros()">
+                        🔄 Limpiar Filtros
+                    </button>
+                    <button class="btn btn-success" onclick="exportarAuditoriaCSV()">
+                        📥 Exportar a CSV
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECCIÓN: ESTADÍSTICAS -->
+        <!-- ============================================ -->
+        <section class="stats-grid fade-in" style="animation-delay: 0.3s;">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-content">
+                    <span class="stat-label">Total Operaciones</span>
+                    <span class="stat-value" id="stat-total-operaciones">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: var(--color-exito);">✅</div>
+                <div class="stat-content">
+                    <span class="stat-label">Inserciones</span>
+                    <span class="stat-value" id="stat-inserciones">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: var(--color-advertencia);">✏️</div>
+                <div class="stat-content">
+                    <span class="stat-label">Actualizaciones</span>
+                    <span class="stat-value" id="stat-actualizaciones">0</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background-color: var(--color-peligro);">🗑️</div>
+                <div class="stat-content">
+                    <span class="stat-label">Eliminaciones</span>
+                    <span class="stat-value" id="stat-eliminaciones">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECCIÓN: TABLA DE AUDITORÍA -->
+        <!-- ============================================ -->
+        <section class="tabla-section fade-in" style="animation-delay: 0.4s;">
+            <div class="card">
+                <div class="card-header">
+                    <h3>📜 Historial de Operaciones</h3>
+                    <span id="contador-resultados" style="color: var(--texto-secundario);">
+                        Cargando...
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha/Hora</th>
+                                <th>Grupo</th>
+                                <th>Tabla</th>
+                                <th>Operación</th>
+                                <th>ID Registro</th>
+                                <th>Datos Antiguos</th>
+                                <th>Datos Nuevos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-auditoria">
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <div class="spinner"></div>
+                                    <p>Cargando historial de auditoría...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECCIÓN: GRÁFICAS (OPCIONAL) -->
+        <!-- ============================================ -->
+        <section class="graficas-section fade-in" style="animation-delay: 0.5s;">
+            <div class="card">
+                <h3>📊 Visualización de Actividad</h3>
+                <p style="color: var(--texto-secundario); margin-bottom: 1.5rem;">
+                    🎯 <strong>RETO 13:</strong> Implementa gráficas usando Chart.js para visualizar la actividad del sistema
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <!-- Gráfica 1: Operaciones por tipo -->
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Operaciones por Tipo</h4>
+                        <canvas id="chart-operaciones" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Gráfica 2: Actividad por grupo -->
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Actividad por Grupo</h4>
+                        <canvas id="chart-grupos" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background-color: var(--fondo-secundario); border-radius: var(--border-radius);">
+                    <strong>💡 Instrucciones para el Reto 13:</strong>
+                    <ol style="margin-top: 0.5rem; margin-left: 1.5rem; color: var(--texto-secundario);">
+                        <li>Incluir Chart.js: <code>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</code></li>
+                        <li>Procesar datos de auditoría para extraer estadísticas</li>
+                        <li>Crear gráfica de pastel (pie chart) para operaciones por tipo</li>
+                        <li>Crear gráfica de barras para actividad por grupo</li>
+                        <li>Actualizar gráficas cuando cambien los filtros</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/api/auditoria.js"></script>
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/modal.js"></script>
+    <script src="../js/pages/auditoria.js"></script>
+
+    <!-- Chart.js (opcional para el RETO 13) -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+</body>
+</html>

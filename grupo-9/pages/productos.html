@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos - Tienda Virtual FUMC</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <div id="navbar-container"></div>
+
+    <!-- SPINNER DE CARGA GLOBAL -->
+    <div id="spinner-carga" class="spinner-container">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container">
+        <!-- Encabezado de la página -->
+        <div class="page-header">
+            <h1 class="page-title">📦 Gestión de Productos</h1>
+            <p class="page-subtitle">Administra el catálogo de productos de la tienda</p>
+        </div>
+
+        <!-- Barra de herramientas -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                    <!-- Búsqueda -->
+                    <div style="flex: 1; min-width: 250px;">
+                        <input
+                            type="text"
+                            id="busqueda-producto"
+                            class="form-input"
+                            placeholder="🔍 Buscar por nombre..."
+                        >
+                    </div>
+
+                    <!-- Filtros -->
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <!-- Filtro por categoría -->
+                        <select id="filtro-categoria" class="form-select">
+                            <option value="todos">Todas las categorías</option>
+                            <!-- Se llenan dinámicamente desde CONFIG.CATEGORIAS_PRODUCTOS -->
+                        </select>
+
+                        <!-- Filtro por estado -->
+                        <select id="filtro-estado" class="form-select">
+                            <option value="todos">Todos los estados</option>
+                            <option value="activos" selected>Solo activos</option>
+                            <option value="inactivos">Solo inactivos</option>
+                        </select>
+
+                        <!-- Botón nuevo producto -->
+                        <button class="btn btn-primary" id="btn-crear-producto">
+                            ➕ Nuevo Producto
+                        </button>
+
+                        <!-- Botón refrescar -->
+                        <button class="btn btn-secondary" onclick="cargarProductos()">
+                            🔄 Actualizar
+                        </button>
+
+                        <!-- 🎯 RETO 6: Botón para exportar CSV (descomenta esta línea) -->
+                        <!-- <button class="btn btn-success" onclick="exportarProductosCSV()">📥 Exportar CSV</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-primario); font-size: 2rem; margin-bottom: 0.5rem;" id="total-productos">0</h3>
+                <p style="color: var(--texto-secundario);">Total Productos</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-exito); font-size: 2rem; margin-bottom: 0.5rem;" id="productos-activos">0</h3>
+                <p style="color: var(--texto-secundario);">Activos</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-peligro); font-size: 2rem; margin-bottom: 0.5rem;" id="productos-inactivos">0</h3>
+                <p style="color: var(--texto-secundario);">Inactivos</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-info); font-size: 2rem; margin-bottom: 0.5rem;" id="valor-inventario">$0</h3>
+                <p style="color: var(--texto-secundario);">Valor Inventario</p>
+            </div>
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">📋 Lista de Productos</h2>
+                <div id="contador-resultados" style="color: var(--texto-secundario);"></div>
+            </div>
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="table" id="tabla-productos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
+                                <th>Categoría</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-productos">
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <p style="padding: 2rem; color: var(--texto-secundario);">
+                                        Cargando productos...
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación (RETO para estudiantes) -->
+                <div id="paginacion" class="text-center" style="margin-top: 1.5rem; display: none;">
+                    <!-- Los estudiantes implementarán esto como reto -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Instrucciones para estudiantes -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">💡 Instrucciones</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h3 style="margin-bottom: 1rem;">🎯 Funcionalidades Disponibles</h3>
+                    <ul style="margin-left: 1.5rem;">
+                        <li><strong>Crear:</strong> Clic en "➕ Nuevo Producto" para agregar un producto</li>
+                        <li><strong>Editar:</strong> Clic en "✏️ Editar" en la fila del producto</li>
+                        <li><strong>Eliminar:</strong> Clic en "🗑️ Eliminar" (soft delete, solo marca como inactivo)</li>
+                        <li><strong>Buscar:</strong> Escribe en el campo de búsqueda para filtrar por nombre</li>
+                        <li><strong>Filtrar:</strong> Usa los selectores de categoría y estado</li>
+                    </ul>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">🎯 Retos en el Código</h3>
+                    <p>Abre el archivo <code>js/pages/productos.js</code> y busca los comentarios con 🎯 RETO:</p>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>Validación de stock negativo</li>
+                        <li>Formato de precios con separadores de miles</li>
+                        <li>Paginación de la tabla</li>
+                        <li>Ordenamiento por columnas</li>
+                        <li>Y más...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULARIO PRODUCTO (Se crea dinámicamente con JavaScript) -->
+    <!-- Ver js/pages/productos.js función abrirModalNuevoProducto() -->
+
+    <!-- Scripts -->
+    <!-- IMPORTANTE: El orden de carga importa -->
+
+    <!-- 1. Configuración -->
+    <script src="../js/config.js"></script>
+
+    <!-- 2. Utilidades (funciones auxiliares) -->
+    <script src="../js/utils/formatters.js"></script>
+    <script src="../js/utils/validators.js"></script>
+    <script src="../js/utils/ui.js"></script>
+
+    <!-- 3. Servicios de API -->
+    <script src="../js/api/productos.js"></script>
+    <script src="../js/api/clientes.js"></script>
+    <script src="../js/api/auditoria.js"></script>
+
+    <!-- 4. Componentes -->
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/modal.js"></script>
+
+    <!-- 5. Lógica específica de esta página -->
+    <script src="../js/pages/productos.js"></script>
+</body>
+</html>

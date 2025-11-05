@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Tienda Virtual FUMC</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- BARRA DE NAVEGACIÓN (Se carga dinámicamente con JavaScript) -->
+    <div id="navbar-container"></div>
+
+    <!-- SPINNER DE CARGA GLOBAL -->
+    <div id="spinner-carga" class="spinner-container">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container">
+        <!-- Encabezado de la página -->
+        <div class="page-header">
+            <h1 class="page-title">🏠 Dashboard - Panel de Control</h1>
+            <p class="page-subtitle">Bienvenido al sistema de gestión de la Tienda Virtual</p>
+        </div>
+
+        <!-- Tarjetas de estadísticas -->
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Estadística de Productos -->
+            <div class="card stat-card">
+                <div class="stat-icon" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">📦</div>
+                <div class="stat-info" style="text-align: center;">
+                    <h3 style="font-size: 2.5rem; color: var(--color-primario); margin-bottom: 0.5rem;" id="total-productos">
+                        --
+                    </h3>
+                    <p style="color: var(--texto-secundario);">Productos Totales</p>
+                    <small id="productos-activos" style="color: var(--color-exito);">-- activos</small>
+                </div>
+            </div>
+
+            <!-- Estadística de Clientes -->
+            <div class="card stat-card">
+                <div class="stat-icon" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">👥</div>
+                <div class="stat-info" style="text-align: center;">
+                    <h3 style="font-size: 2.5rem; color: var(--color-secundario); margin-bottom: 0.5rem;" id="total-clientes">
+                        --
+                    </h3>
+                    <p style="color: var(--texto-secundario);">Clientes Registrados</p>
+                    <small id="clientes-activos" style="color: var(--color-exito);">-- activos</small>
+                </div>
+            </div>
+
+            <!-- Estadística de Operaciones -->
+            <div class="card stat-card">
+                <div class="stat-icon" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">📊</div>
+                <div class="stat-info" style="text-align: center;">
+                    <h3 style="font-size: 2.5rem; color: var(--color-info); margin-bottom: 0.5rem;" id="total-operaciones">
+                        --
+                    </h3>
+                    <p style="color: var(--texto-secundario);">Operaciones Registradas</p>
+                    <small id="operaciones-grupo" style="color: var(--color-primario);">-- de tu grupo</small>
+                </div>
+            </div>
+
+            <!-- Estadística de Valor Inventario -->
+            <div class="card stat-card">
+                <div class="stat-icon" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">💰</div>
+                <div class="stat-info" style="text-align: center;">
+                    <h3 style="font-size: 2.5rem; color: var(--color-exito); margin-bottom: 0.5rem;" id="valor-inventario">
+                        --
+                    </h3>
+                    <p style="color: var(--texto-secundario);">Valor del Inventario</p>
+                    <small style="color: var(--texto-secundario);">Productos activos</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accesos rápidos -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">⚡ Accesos Rápidos</h2>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <a href="pages/productos.html" class="btn btn-primary btn-lg">
+                        📦 Gestionar Productos
+                    </a>
+                    <a href="pages/clientes.html" class="btn btn-primary btn-lg">
+                        👥 Gestionar Clientes
+                    </a>
+                    <a href="pages/auditoria.html" class="btn btn-primary btn-lg">
+                        📊 Ver Reportes
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimas operaciones -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">🕐 Últimas Operaciones</h2>
+                <button class="btn btn-secondary btn-sm" onclick="cargarUltimasOperaciones()">
+                    🔄 Actualizar
+                </button>
+            </div>
+            <div class="card-body">
+                <div id="ultimas-operaciones">
+                    <p class="text-center" style="color: var(--texto-secundario);">Cargando operaciones...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del sistema -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">ℹ️ Información del Sistema</h2>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Grupo:</strong></td>
+                            <td id="info-grupo">--</td>
+                        </tr>
+                        <tr>
+                            <td><strong>URL Backend:</strong></td>
+                            <td id="info-api-url">--</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Estado Conexión:</strong></td>
+                            <td id="info-conexion">Verificando...</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Última actualización:</strong></td>
+                            <td id="info-ultima-actualizacion">--</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Instrucciones para estudiantes -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">📚 Instrucciones para Estudiantes</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h3 style="margin-bottom: 1rem;">🎯 ¿Cómo usar esta aplicación?</h3>
+                    <ol style="margin-left: 1.5rem;">
+                        <li><strong>Gestionar Productos:</strong> Crea, edita, elimina y busca productos de la tienda</li>
+                        <li><strong>Gestionar Clientes:</strong> Registra clientes, actualiza su información</li>
+                        <li><strong>Ver Auditoría:</strong> Observa todas las operaciones que se han realizado</li>
+                        <li><strong>Explorar el Código:</strong> Abre los archivos .js y lee los comentarios explicativos</li>
+                        <li><strong>Completar Retos:</strong> Busca los comentarios con 🎯 RETO en el código</li>
+                    </ol>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">💡 Estructura del Proyecto</h3>
+                    <ul style="margin-left: 1.5rem;">
+                        <li><code>js/api/</code> - Funciones para comunicarse con el backend</li>
+                        <li><code>js/components/</code> - Componentes reutilizables (navbar, modales)</li>
+                        <li><code>js/pages/</code> - Lógica específica de cada página</li>
+                        <li><code>css/</code> - Estilos de la aplicación</li>
+                        <li><code>pages/</code> - Vistas HTML de cada sección</li>
+                    </ul>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">🚀 Próximos Pasos</h3>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Asegúrate de que el <strong>backend esté ejecutándose</strong> (F5 en el proyecto backend)</li>
+                        <li>Cambia tu <strong>nombre de grupo</strong> en <code>js/config.js</code></li>
+                        <li>Explora cada sección del menú</li>
+                        <li>Lee el código y los comentarios explicativos</li>
+                        <li>Completa los retos marcados con 🎯</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- IMPORTANTE: El orden de carga importa -->
+
+    <!-- 1. Configuración (debe cargarse primero) -->
+    <script src="js/config.js"></script>
+
+    <!-- 2. Servicios de API -->
+    <script src="js/api/productos.js"></script>
+    <script src="js/api/clientes.js"></script>
+    <script src="js/api/auditoria.js"></script>
+
+    <!-- 3. Componentes -->
+    <script src="js/components/navbar.js"></script>
+    <script src="js/components/modal.js"></script>
+
+    <!-- 4. Script específico de esta página -->
+    <script>
+        // ============================================
+        // LÓGICA DEL DASHBOARD
+        // ============================================
+
+        /**
+         * Carga todas las estadísticas del dashboard
+         */
+        async function cargarEstadisticas() {
+            try {
+                // Cargar productos
+                const productos = await obtenerTodosLosProductos();
+                const productosActivos = productos.filter(p => p.activo);
+
+                document.getElementById('total-productos').textContent = productos.length;
+                document.getElementById('productos-activos').textContent = `${productosActivos.length} activos`;
+
+                // Calcular valor del inventario
+                const valorInventario = productosActivos.reduce((total, p) => {
+                    return total + (p.precio * p.stock);
+                }, 0);
+
+                document.getElementById('valor-inventario').textContent =
+                    new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(valorInventario);
+
+                // Cargar clientes
+                const clientes = await obtenerTodosLosClientes();
+                const clientesActivos = clientes.filter(c => c.activo);
+
+                document.getElementById('total-clientes').textContent = clientes.length;
+                document.getElementById('clientes-activos').textContent = `${clientesActivos.length} activos`;
+
+                // Cargar auditoría
+                const historial = await obtenerTodoHistorial();
+                const operacionesGrupo = historial.filter(h => h.grupo_estudiantes === CONFIG.GRUPO_ESTUDIANTES);
+
+                document.getElementById('total-operaciones').textContent = historial.length;
+                document.getElementById('operaciones-grupo').textContent = `${operacionesGrupo.length} de tu grupo`;
+
+            } catch (error) {
+                console.error('Error al cargar estadísticas:', error);
+                mostrarAlerta('Error', 'No se pudieron cargar las estadísticas. Verifica que el backend esté ejecutándose.', 'error');
+            }
+        }
+
+        /**
+         * Carga las últimas 10 operaciones de auditoría
+         */
+        async function cargarUltimasOperaciones() {
+            const contenedor = document.getElementById('ultimas-operaciones');
+
+            try {
+                contenedor.innerHTML = '<p class="text-center">Cargando...</p>';
+
+                const historial = await obtenerTodoHistorial();
+
+                // Ordenar por fecha descendente y tomar las últimas 10
+                const ultimas = historial
+                    .sort((a, b) => new Date(b.fecha_operacion) - new Date(a.fecha_operacion))
+                    .slice(0, 10);
+
+                if (ultimas.length === 0) {
+                    contenedor.innerHTML = '<p class="text-center" style="color: var(--texto-secundario);">No hay operaciones registradas aún.</p>';
+                    return;
+                }
+
+                // Crear tabla
+                let html = `
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Grupo</th>
+                                    <th>Tabla</th>
+                                    <th>Operación</th>
+                                    <th>ID Registro</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                ultimas.forEach(op => {
+                    const fecha = new Date(op.fecha_operacion).toLocaleString('es-CO');
+                    const colorOperacion = {
+                        'CREATE': 'var(--color-exito)',
+                        'UPDATE': 'var(--color-info)',
+                        'DELETE': 'var(--color-peligro)'
+                    };
+
+                    html += `
+                        <tr>
+                            <td>${fecha}</td>
+                            <td>${op.grupo_estudiantes}</td>
+                            <td>${op.tabla_afectada}</td>
+                            <td><span style="color: ${colorOperacion[op.operacion]}; font-weight: bold;">${op.operacion}</span></td>
+                            <td>${op.registro_id}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table></div>';
+                contenedor.innerHTML = html;
+
+            } catch (error) {
+                console.error('Error al cargar operaciones:', error);
+                contenedor.innerHTML = '<p class="text-center alert alert-error">Error al cargar operaciones</p>';
+            }
+        }
+
+        /**
+         * Actualiza la información del sistema
+         */
+        async function actualizarInfoSistema() {
+            document.getElementById('info-grupo').textContent = CONFIG.GRUPO_ESTUDIANTES;
+            document.getElementById('info-api-url').textContent = CONFIG.API_BASE_URL;
+
+            const conectado = await verificarConexionBackend();
+            const estadoHTML = conectado
+                ? '<span style="color: var(--color-exito);">✅ Conectado</span>'
+                : '<span style="color: var(--color-peligro);">❌ Desconectado</span>';
+
+            document.getElementById('info-conexion').innerHTML = estadoHTML;
+            document.getElementById('info-ultima-actualizacion').textContent = new Date().toLocaleString('es-CO');
+        }
+
+        /**
+         * Inicializa el dashboard al cargar la página
+         */
+        async function inicializarDashboard() {
+            console.log('🚀 Inicializando Dashboard...');
+
+            await actualizarInfoSistema();
+            await cargarEstadisticas();
+            await cargarUltimasOperaciones();
+
+            console.log('✅ Dashboard cargado');
+        }
+
+        // Ejecutar al cargar la página
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inicializarDashboard);
+        } else {
+            inicializarDashboard();
+        }
+
+        // Actualizar cada 60 segundos
+        setInterval(cargarEstadisticas, 60000);
+
+        // ============================================
+        // 🎯 RETO 13: Gráfico de pastel con operaciones por grupo
+        // ============================================
+
+        /**
+         * Crea un gráfico de pastel mostrando qué porcentaje de operaciones
+         * ha hecho cada grupo.
+         *
+         * 💡 PISTA:
+         * 1. Obtener todas las operaciones de auditoría
+         * 2. Agrupar por grupo_estudiantes
+         * 3. Contar operaciones de cada grupo
+         * 4. Usar Chart.js (o Canvas API) para dibujar el gráfico
+         *
+         * Primero agregar Chart.js:
+         * <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+         *
+         * Y un canvas en el HTML:
+         * <canvas id="grafico-grupos"></canvas>
+         */
+    </script>
+</body>
+</html>

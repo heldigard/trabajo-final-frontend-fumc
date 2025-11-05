@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes - Tienda Virtual FUMC</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <div id="navbar-container"></div>
+
+    <!-- SPINNER DE CARGA GLOBAL -->
+    <div id="spinner-carga" class="spinner-container">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container">
+        <!-- Encabezado de la página -->
+        <div class="page-header">
+            <h1 class="page-title">👥 Gestión de Clientes</h1>
+            <p class="page-subtitle">Administra la base de datos de clientes de la tienda</p>
+        </div>
+
+        <!-- Barra de herramientas -->
+        <div class="card">
+            <div class="card-body">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                    <!-- Búsqueda -->
+                    <div style="flex: 1; min-width: 250px;">
+                        <input
+                            type="text"
+                            id="buscar-cliente"
+                            class="form-input"
+                            placeholder="🔍 Buscar por nombre o email..."
+                            onkeyup="buscarCliente()"
+                        >
+                    </div>
+
+                    <!-- Filtros y acciones -->
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <!-- Filtro por ciudad -->
+                        <select id="filtro-ciudad" class="form-select" onchange="filtrarClientes()">
+                            <option value="">Todas las ciudades</option>
+                            <!-- Se llenan dinámicamente desde CONFIG.CIUDADES -->
+                        </select>
+
+                        <!-- Filtro por estado -->
+                        <select id="filtro-estado" class="form-select" onchange="filtrarClientes()">
+                            <option value="todos">Todos los estados</option>
+                            <option value="activos" selected>Solo activos</option>
+                            <option value="inactivos">Solo inactivos</option>
+                        </select>
+
+                        <!-- Botón nuevo cliente -->
+                        <button class="btn btn-primary" onclick="abrirModalNuevoCliente()">
+                            ➕ Nuevo Cliente
+                        </button>
+
+                        <!-- Botón refrescar -->
+                        <button class="btn btn-secondary" onclick="cargarClientes()">
+                            🔄 Actualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas rápidas -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-primario); font-size: 2rem; margin-bottom: 0.5rem;" id="stat-total">0</h3>
+                <p style="color: var(--texto-secundario);">Total Clientes</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-exito); font-size: 2rem; margin-bottom: 0.5rem;" id="stat-activos">0</h3>
+                <p style="color: var(--texto-secundario);">Activos</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-peligro); font-size: 2rem; margin-bottom: 0.5rem;" id="stat-inactivos">0</h3>
+                <p style="color: var(--texto-secundario);">Inactivos</p>
+            </div>
+            <div class="card" style="text-align: center;">
+                <h3 style="color: var(--color-info); font-size: 2rem; margin-bottom: 0.5rem;" id="stat-ciudades">0</h3>
+                <p style="color: var(--texto-secundario);">Ciudades</p>
+            </div>
+        </div>
+
+        <!-- Tabla de clientes -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">📋 Lista de Clientes</h2>
+                <div id="contador-resultados" style="color: var(--texto-secundario);"></div>
+            </div>
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="table" id="tabla-clientes">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Documento</th>
+                                <th>Ciudad</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-clientes">
+                            <tr>
+                                <td colspan="8" class="text-center">
+                                    <p style="padding: 2rem; color: var(--texto-secundario);">
+                                        Cargando clientes...
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instrucciones -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">💡 Instrucciones</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h3 style="margin-bottom: 1rem;">🎯 Funcionalidades Disponibles</h3>
+                    <ul style="margin-left: 1.5rem;">
+                        <li><strong>Crear:</strong> Clic en "➕ Nuevo Cliente" para registrar un cliente</li>
+                        <li><strong>Editar:</strong> Clic en "✏️ Editar" en la fila del cliente</li>
+                        <li><strong>Eliminar:</strong> Clic en "🗑️ Eliminar" (soft delete)</li>
+                        <li><strong>Buscar:</strong> Escribe en el campo de búsqueda para filtrar por nombre o email</li>
+                        <li><strong>Filtrar:</strong> Usa los selectores de ciudad y estado</li>
+                    </ul>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">⚠️ Validaciones Importantes</h3>
+                    <ul style="margin-left: 1.5rem;">
+                        <li>El <strong>email</strong> debe ser único en TODA la base de datos (compartida entre grupos)</li>
+                        <li>El <strong>documento</strong> debe ser único</li>
+                        <li>El <strong>teléfono</strong> debe tener formato válido (10 dígitos para celulares)</li>
+                        <li>Todos los campos marcados con * son <strong>obligatorios</strong></li>
+                    </ul>
+
+                    <h3 style="margin: 1.5rem 0 1rem;">🎯 Retos en el Código</h3>
+                    <p>Abre <code>js/pages/clientes.js</code> y busca los comentarios con 🎯 RETO</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- IMPORTANTE: El orden de carga importa -->
+
+    <!-- 1. Configuración -->
+    <script src="../js/config.js"></script>
+
+    <!-- 2. Servicios de API -->
+    <script src="../js/api/productos.js"></script>
+    <script src="../js/api/clientes.js"></script>
+    <script src="../js/api/auditoria.js"></script>
+
+    <!-- 3. Componentes -->
+    <script src="../js/components/navbar.js"></script>
+    <script src="../js/components/modal.js"></script>
+
+    <!-- 4. Lógica específica de esta página -->
+    <script src="../js/pages/clientes.js"></script>
+</body>
+</html>
