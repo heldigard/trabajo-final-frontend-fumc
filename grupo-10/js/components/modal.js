@@ -173,34 +173,52 @@ class Modal {
  *
  * @param {string} titulo - Título del modal
  * @param {string} mensaje - Mensaje a mostrar
- * @param {Function} onConfirmar - Callback al confirmar
+ * @returns {Promise<boolean>} - Promesa que resuelve true si confirma, false si cancela
  *
- * Ejemplo de uso:
- * mostrarConfirmacion(
+ * Ejemplo de uso con async/await:
+ * const confirmado = await mostrarConfirmacion(
  *     'Eliminar producto',
- *     '¿Estás seguro?',
- *     () => { console.log('Confirmado'); }
+ *     '¿Estás seguro?'
  * );
+ * if (confirmado) {
+ *     // Usuario confirmó
+ * }
  */
-function mostrarConfirmacion(titulo, mensaje, onConfirmar) {
-    const modal = new Modal(
-        'confirmacion',
-        titulo,
-        `<p>${mensaje}</p>`,
-        [
-            { texto: 'Cancelar', tipo: 'secondary', accion: 'cerrar' },
-            { texto: 'Confirmar', tipo: 'danger', accion: 'confirmar' }
-        ]
-    );
+function mostrarConfirmacion(titulo, mensaje) {
+    return new Promise((resolve) => {
+        const modal = new Modal(
+            'confirmacion',
+            titulo,
+            `<p>${mensaje}</p>`,
+            [
+                { texto: 'Cancelar', tipo: 'secondary', accion: 'cerrar' },
+                { texto: 'Confirmar', tipo: 'danger', accion: 'confirmar' }
+            ]
+        );
 
-    modal.onAction((accion) => {
-        if (accion === 'confirmar' && onConfirmar) {
-            onConfirmar();
-        }
-        modal.cerrar();
+        let resuelto = false; // Flag para evitar múltiples resoluciones
+
+        modal.onAction((accion) => {
+            if (!resuelto) {
+                resuelto = true;
+                const confirmado = accion === 'confirmar';
+                resolve(confirmado);
+                modal.cerrar();
+            }
+        });
+
+        // Interceptar el cierre del modal (X o ESC)
+        const originalCerrar = modal.cerrar.bind(modal);
+        modal.cerrar = function() {
+            if (!resuelto) {
+                resuelto = true;
+                resolve(false);
+            }
+            originalCerrar();
+        };
+
+        modal.abrir();
     });
-
-    modal.abrir();
 }
 
 /**

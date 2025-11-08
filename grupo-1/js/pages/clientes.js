@@ -346,12 +346,22 @@ async function confirmarEliminarCliente(id) {
         );
 
         if (confirmado) {
+            // Mostrar spinner mientras se elimina
+            mostrarSpinnerGlobal('Eliminando cliente...');
+
             await eliminarCliente(id);
+
+            // Ocultar spinner
+            ocultarSpinnerGlobal();
+
             mostrarAlerta('Éxito', 'Cliente eliminado correctamente', 'success');
             await cargarClientes();
         }
 
     } catch (error) {
+        // Asegurarse de ocultar el spinner en caso de error
+        ocultarSpinnerGlobal();
+
         mostrarAlerta('Error', 'No se pudo eliminar el cliente', 'error');
     }
 }

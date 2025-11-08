@@ -340,18 +340,33 @@ async function confirmarEliminarCliente(id) {
     try {
         const cliente = await obtenerClientePorId(id);
 
+        console.log('📋 Mostrando modal de confirmación para:', cliente.nombre);
+
         const confirmado = await mostrarConfirmacion(
             '¿Eliminar cliente?',
             `¿Estás seguro de eliminar al cliente "${cliente.nombre}"?`
         );
 
+        console.log('✅ Resultado de confirmación:', confirmado);
+
         if (confirmado) {
+            // Mostrar spinner mientras se elimina
+            mostrarSpinnerGlobal('Eliminando cliente...');
+
             await eliminarCliente(id);
+
+            // Ocultar spinner
+            ocultarSpinnerGlobal();
+
             mostrarAlerta('Éxito', 'Cliente eliminado correctamente', 'success');
             await cargarClientes();
         }
 
     } catch (error) {
+        // Asegurarse de ocultar el spinner en caso de error
+        ocultarSpinnerGlobal();
+
+        console.error('❌ Error en confirmarEliminarCliente:', error);
         mostrarAlerta('Error', 'No se pudo eliminar el cliente', 'error');
     }
 }

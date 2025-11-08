@@ -164,3 +164,36 @@ function limpiarFormulario(idFormulario) {
         form.reset();
     }
 }
+
+/**
+ * Muestra el spinner de carga global (centro de pantalla)
+ *
+ * @param {string} mensaje - Mensaje opcional a mostrar
+ *
+ * @example
+ * mostrarSpinnerGlobal('Eliminando cliente...');
+ */
+function mostrarSpinnerGlobal(mensaje = 'Cargando...') {
+    const spinner = document.getElementById('spinner-carga');
+    if (spinner) {
+        // Actualizar mensaje si hay un párrafo dentro
+        const p = spinner.querySelector('p');
+        if (p) {
+            p.textContent = mensaje;
+        }
+        spinner.style.display = 'flex';
+    }
+}
+
+/**
+ * Oculta el spinner de carga global
+ *
+ * @example
+ * ocultarSpinnerGlobal();
+ */
+function ocultarSpinnerGlobal() {
+    const spinner = document.getElementById('spinner-carga');
+    if (spinner) {
+        spinner.style.display = 'none';
+    }
+}

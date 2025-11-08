@@ -50,7 +50,7 @@ async function cargarHistorial() {
     try {
         mostrarSpinner('tbody-auditoria', 6);
 
-        historialCompleto = await obtenerHistorialAuditoria();
+        historialCompleto = await obtenerTodoHistorial();
         historialFiltrado = historialCompleto;
 
         console.log(`✅ ${historialCompleto.length} registros de auditoría cargados`);

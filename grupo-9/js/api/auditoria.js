@@ -21,6 +21,35 @@
  */
 
 // ============================================
+// FUNCIONES AUXILIARES
+// ============================================
+
+/**
+ * Maneja errores de peticiones HTTP de forma consistente
+ *
+ * @param {Response} response - Objeto Response de fetch
+ * @returns {Promise<Object>} - Datos parseados o lanza error
+ */
+async function manejarRespuesta(response) {
+    if (!response.ok) {
+        // Intentar obtener mensaje de error del backend
+        let mensajeError = CONFIG.MENSAJES.ERROR_GENERAL;
+
+        try {
+            const errorData = await response.json();
+            mensajeError = errorData.detail || errorData.message || mensajeError;
+        } catch {
+            // Si no se puede parsear, usar mensaje genérico
+            mensajeError = `Error ${response.status}: ${response.statusText}`;
+        }
+
+        throw new Error(mensajeError);
+    }
+
+    return await response.json();
+}
+
+// ============================================
 // FUNCIONES DE API - AUDITORÍA
 // ============================================
 
@@ -41,8 +70,6 @@
  */
 async function obtenerTodoHistorial() {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL('/auditoria/'), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -53,8 +80,6 @@ async function obtenerTodoHistorial() {
     } catch (error) {
         console.error('Error al obtener historial de auditoría:', error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -71,8 +96,6 @@ async function obtenerTodoHistorial() {
  */
 async function obtenerHistorialPorGrupo(grupo) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/auditoria/grupo/${encodeURIComponent(grupo)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -83,8 +106,6 @@ async function obtenerHistorialPorGrupo(grupo) {
     } catch (error) {
         console.error(`Error al obtener historial del grupo "${grupo}":`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -99,8 +120,6 @@ async function obtenerHistorialPorGrupo(grupo) {
  */
 async function obtenerHistorialPorTabla(tabla) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/auditoria/tabla/${encodeURIComponent(tabla)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -111,8 +130,6 @@ async function obtenerHistorialPorTabla(tabla) {
     } catch (error) {
         console.error(`Error al obtener historial de tabla "${tabla}":`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -129,8 +146,6 @@ async function obtenerHistorialPorTabla(tabla) {
  */
 async function obtenerHistorialPorOperacion(operacion) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/auditoria/operacion/${encodeURIComponent(operacion)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -141,8 +156,6 @@ async function obtenerHistorialPorOperacion(operacion) {
     } catch (error) {
         console.error(`Error al obtener historial de operación "${operacion}":`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -165,8 +178,6 @@ async function obtenerHistorialPorOperacion(operacion) {
  */
 async function obtenerHistorialRegistro(tabla, id) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/auditoria/registro/${encodeURIComponent(tabla)}/${id}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -177,8 +188,6 @@ async function obtenerHistorialRegistro(tabla, id) {
     } catch (error) {
         console.error(`Error al obtener historial de ${tabla} ID ${id}:`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 

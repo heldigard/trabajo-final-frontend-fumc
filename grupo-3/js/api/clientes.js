@@ -19,6 +19,35 @@
  */
 
 // ============================================
+// FUNCIONES AUXILIARES
+// ============================================
+
+/**
+ * Maneja errores de peticiones HTTP de forma consistente
+ *
+ * @param {Response} response - Objeto Response de fetch
+ * @returns {Promise<Object>} - Datos parseados o lanza error
+ */
+async function manejarRespuesta(response) {
+    if (!response.ok) {
+        // Intentar obtener mensaje de error del backend
+        let mensajeError = CONFIG.MENSAJES.ERROR_GENERAL;
+
+        try {
+            const errorData = await response.json();
+            mensajeError = errorData.detail || errorData.message || mensajeError;
+        } catch {
+            // Si no se puede parsear, usar mensaje genérico
+            mensajeError = `Error ${response.status}: ${response.statusText}`;
+        }
+
+        throw new Error(mensajeError);
+    }
+
+    return await response.json();
+}
+
+// ============================================
 // FUNCIONES DE API - CLIENTES
 // ============================================
 
@@ -29,8 +58,6 @@
  */
 async function obtenerTodosLosClientes() {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL('/clientes/'), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -41,8 +68,6 @@ async function obtenerTodosLosClientes() {
     } catch (error) {
         console.error('Error al obtener clientes:', error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -54,8 +79,6 @@ async function obtenerTodosLosClientes() {
  */
 async function obtenerClientePorId(id) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/${id}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -64,10 +87,8 @@ async function obtenerClientePorId(id) {
         return await manejarRespuesta(response);
 
     } catch (error) {
-        console.error(`Error al obtener cliente ${id}:`, error);
+        console.error('Error al obtener cliente:', error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -83,8 +104,6 @@ async function obtenerClientePorId(id) {
  */
 async function buscarClientes(termino) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/buscar/${encodeURIComponent(termino)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -95,8 +114,6 @@ async function buscarClientes(termino) {
     } catch (error) {
         console.error(`Error al buscar clientes con término "${termino}":`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -111,8 +128,6 @@ async function buscarClientes(termino) {
  */
 async function filtrarClientesPorCiudad(ciudad) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/ciudad/${encodeURIComponent(ciudad)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -123,8 +138,6 @@ async function filtrarClientesPorCiudad(ciudad) {
     } catch (error) {
         console.error(`Error al filtrar clientes por ciudad "${ciudad}":`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -139,8 +152,6 @@ async function filtrarClientesPorCiudad(ciudad) {
  */
 async function buscarClientePorDocumento(documento) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/documento/${encodeURIComponent(documento)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -151,8 +162,6 @@ async function buscarClientePorDocumento(documento) {
     } catch (error) {
         console.error(`Error al buscar cliente por documento "${documento}":`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -184,8 +193,6 @@ async function buscarClientePorDocumento(documento) {
  */
 async function crearCliente(cliente) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL('/clientes/'), {
             method: 'POST',
             headers: {
@@ -200,8 +207,6 @@ async function crearCliente(cliente) {
     } catch (error) {
         console.error('Error al crear cliente:', error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -216,8 +221,6 @@ async function crearCliente(cliente) {
  */
 async function actualizarClienteCompleto(id, cliente) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/${id}`), {
             method: 'PUT',
             headers: {
@@ -232,8 +235,6 @@ async function actualizarClienteCompleto(id, cliente) {
     } catch (error) {
         console.error(`Error al actualizar cliente ${id}:`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -250,8 +251,6 @@ async function actualizarClienteCompleto(id, cliente) {
  */
 async function actualizarClienteParcial(id, camposActualizar) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/${id}`), {
             method: 'PATCH',
             headers: {
@@ -266,8 +265,6 @@ async function actualizarClienteParcial(id, camposActualizar) {
     } catch (error) {
         console.error(`Error al actualizar parcialmente cliente ${id}:`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
@@ -281,8 +278,6 @@ async function actualizarClienteParcial(id, camposActualizar) {
  */
 async function eliminarCliente(id) {
     try {
-        mostrarCargando(true);
-
         const response = await fetch(buildURL(`/clientes/${id}`), {
             method: 'DELETE',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
@@ -293,8 +288,6 @@ async function eliminarCliente(id) {
     } catch (error) {
         console.error(`Error al eliminar cliente ${id}:`, error);
         throw error;
-    } finally {
-        mostrarCargando(false);
     }
 }
 
