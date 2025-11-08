@@ -56,14 +56,12 @@ async function manejarRespuesta(response) {
  *
  * @param {boolean} mostrar - true para mostrar, false para ocultar
  */
-function mostrarCargando(mostrar) {
+function mostrarSpinnerGlobal(mostrar) {
   const spinner = document.getElementById('spinner-carga');
   if (spinner) {
-    spinner.style.display = mostrar ? 'block' : 'none';
+    spinner.style.display = mostrar ? 'flex' : 'none';
   }
-}
-
-// ============================================
+} // ============================================
 // FUNCIONES DE API - PRODUCTOS
 // ============================================
 
@@ -78,7 +76,7 @@ function mostrarCargando(mostrar) {
  */
 async function obtenerTodosLosProductos() {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     const response = await fetch(buildURL('/productos/'), {
       method: 'GET',
@@ -91,7 +89,7 @@ async function obtenerTodosLosProductos() {
     console.error('Error al obtener productos:', error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -107,7 +105,7 @@ async function obtenerTodosLosProductos() {
  */
 async function obtenerProductoPorId(id) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     const response = await fetch(buildURL(`/productos/${id}`), {
       method: 'GET',
@@ -119,7 +117,7 @@ async function obtenerProductoPorId(id) {
     console.error(`Error al obtener producto ${id}:`, error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -134,7 +132,7 @@ async function obtenerProductoPorId(id) {
  */
 async function buscarProductosPorNombre(nombre) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     const response = await fetch(buildURL('/productos/buscar/nombre') + `?query=${encodeURIComponent(nombre)}`, {
       method: 'GET',
@@ -146,7 +144,7 @@ async function buscarProductosPorNombre(nombre) {
     console.error(`Error al buscar productos por nombre "${nombre}":`, error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -161,7 +159,7 @@ async function buscarProductosPorNombre(nombre) {
  */
 async function filtrarProductosPorCategoria(categoria) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     const response = await fetch(buildURL('/productos/') + `?categoria=${encodeURIComponent(categoria)}`, {
       method: 'GET',
@@ -173,7 +171,7 @@ async function filtrarProductosPorCategoria(categoria) {
     console.error(`Error al filtrar productos por categoría "${categoria}":`, error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -296,7 +294,7 @@ async function filtrarProductosPorCategoria(categoria) {
  */
 async function crearProducto(producto) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     // TODO: RETO 7 - Parte 1: Crear copia del producto con spread operator
     // const productoConFirma = { ...producto };
@@ -324,7 +322,7 @@ async function crearProducto(producto) {
     console.error('Error al crear producto:', error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -399,7 +397,7 @@ async function crearProducto(producto) {
  */
 async function actualizarProductoCompleto(id, producto) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     // TODO: RETO 7 - Igual que en POST, pero con "Editado" en lugar de "Creado"
 
@@ -418,7 +416,7 @@ async function actualizarProductoCompleto(id, producto) {
     console.error(`Error al actualizar producto ${id}:`, error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -437,7 +435,7 @@ async function actualizarProductoCompleto(id, producto) {
  */
 async function actualizarProductoParcial(id, camposActualizar) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     const response = await fetch(buildURL(`/productos/${id}`), {
       method: 'PATCH',
@@ -453,7 +451,7 @@ async function actualizarProductoParcial(id, camposActualizar) {
     console.error(`Error al actualizar parcialmente producto ${id}:`, error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 
@@ -473,7 +471,7 @@ async function actualizarProductoParcial(id, camposActualizar) {
  */
 async function eliminarProducto(id) {
   try {
-    mostrarCargando(true);
+    mostrarSpinnerGlobal(true);
 
     const response = await fetch(buildURL(`/productos/${id}`), {
       method: 'DELETE',
@@ -485,7 +483,7 @@ async function eliminarProducto(id) {
     console.error(`Error al eliminar producto ${id}:`, error);
     throw error;
   } finally {
-    mostrarCargando(false);
+    mostrarSpinnerGlobal(false);
   }
 }
 

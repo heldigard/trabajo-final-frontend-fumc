@@ -22,14 +22,19 @@
  * @returns {string} - HTML de la navbar
  */
 function crearNavbar() {
-    const paginaActual = window.location.pathname.split('/').pop() || 'index.html';
+  const paginaActual = window.location.pathname.split('/').pop() || 'index.html';
 
-    return `
+  // Detectar si estamos en la carpeta pages o en la raíz
+  const enCarpetaPages = window.location.pathname.includes('/pages/');
+  const rutaPaginas = enCarpetaPages ? '' : 'pages/';
+  const rutaRaiz = enCarpetaPages ? '../' : '';
+
+  return `
         <nav class="navbar">
             <div class="navbar-container">
                 <!-- Logo y título -->
                 <div class="navbar-brand">
-                    <a href="../index.html">
+                    <a href="${rutaRaiz}index.html">
                         🛒 <span>Tienda Virtual</span>
                     </a>
                 </div>
@@ -37,22 +42,28 @@ function crearNavbar() {
                 <!-- Enlaces de navegación -->
                 <ul class="navbar-menu">
                     <li>
-                        <a href="../index.html" class="${paginaActual === 'index.html' ? 'active' : ''}">
+                        <a href="${rutaRaiz}index.html" class="${paginaActual === 'index.html' ? 'active' : ''}">
                             🏠 Dashboard
                         </a>
                     </li>
                     <li>
-                        <a href="productos.html" class="${paginaActual === 'productos.html' ? 'active' : ''}">
+                        <a href="${rutaPaginas}productos.html" class="${
+    paginaActual === 'productos.html' ? 'active' : ''
+  }">
                             📦 Productos
                         </a>
                     </li>
                     <li>
-                        <a href="clientes.html" class="${paginaActual === 'clientes.html' ? 'active' : ''}">
+                        <a href="${rutaPaginas}clientes.html" class="${
+    paginaActual === 'clientes.html' ? 'active' : ''
+  }">
                             👥 Clientes
                         </a>
                     </li>
                     <li>
-                        <a href="auditoria.html" class="${paginaActual === 'auditoria.html' ? 'active' : ''}">
+                        <a href="${rutaPaginas}auditoria.html" class="${
+    paginaActual === 'auditoria.html' ? 'active' : ''
+  }">
                             📊 Auditoría
                         </a>
                     </li>
@@ -80,14 +91,14 @@ function crearNavbar() {
  * Se ejecuta automáticamente al cargar el archivo.
  */
 function renderizarNavbar() {
-    const contenedor = document.getElementById('navbar-container');
+  const contenedor = document.getElementById('navbar-container');
 
-    if (contenedor) {
-        contenedor.innerHTML = crearNavbar();
-        verificarEstadoConexion();
-    } else {
-        console.warn('⚠️ No se encontró el elemento #navbar-container');
-    }
+  if (contenedor) {
+    contenedor.innerHTML = crearNavbar();
+    verificarEstadoConexion();
+  } else {
+    console.warn('⚠️ No se encontró el elemento #navbar-container');
+  }
 }
 
 /**
@@ -95,28 +106,28 @@ function renderizarNavbar() {
  * y actualiza el indicador visual
  */
 async function verificarEstadoConexion() {
-    const statusDot = document.getElementById('status-dot');
-    const statusText = document.getElementById('status-text');
+  const statusDot = document.getElementById('status-dot');
+  const statusText = document.getElementById('status-text');
 
-    if (!statusDot || !statusText) return;
+  if (!statusDot || !statusText) return;
 
-    try {
-        const conectado = await verificarConexionBackend();
+  try {
+    const conectado = await verificarConexionBackend();
 
-        if (conectado) {
-            statusDot.className = 'status-dot conectado';
-            statusText.textContent = 'Conectado';
-            statusText.title = 'Backend disponible en ' + CONFIG.API_BASE_URL;
-        } else {
-            statusDot.className = 'status-dot desconectado';
-            statusText.textContent = 'Desconectado';
-            statusText.title = 'No se puede conectar al backend. Verifica que esté ejecutándose.';
-        }
-    } catch (error) {
-        statusDot.className = 'status-dot desconectado';
-        statusText.textContent = 'Error';
-        statusText.title = error.message;
+    if (conectado) {
+      statusDot.className = 'status-dot conectado';
+      statusText.textContent = 'Conectado';
+      statusText.title = 'Backend disponible en ' + CONFIG.API_BASE_URL;
+    } else {
+      statusDot.className = 'status-dot desconectado';
+      statusText.textContent = 'Desconectado';
+      statusText.title = 'No se puede conectar al backend. Verifica que esté ejecutándose.';
     }
+  } catch (error) {
+    statusDot.className = 'status-dot desconectado';
+    statusText.textContent = 'Error';
+    statusText.title = error.message;
+  }
 }
 
 /**
@@ -125,10 +136,10 @@ async function verificarEstadoConexion() {
  * @param {string} nuevoGrupo - Nombre del nuevo grupo
  */
 function actualizarGrupoBadge(nuevoGrupo) {
-    const badge = document.getElementById('grupo-badge');
-    if (badge) {
-        badge.textContent = `👥 ${nuevoGrupo}`;
-    }
+  const badge = document.getElementById('grupo-badge');
+  if (badge) {
+    badge.textContent = `👥 ${nuevoGrupo}`;
+  }
 }
 
 // ============================================
@@ -137,9 +148,9 @@ function actualizarGrupoBadge(nuevoGrupo) {
 
 // Renderizar navbar cuando el DOM esté listo
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderizarNavbar);
+  document.addEventListener('DOMContentLoaded', renderizarNavbar);
 } else {
-    renderizarNavbar();
+  renderizarNavbar();
 }
 
 // Verificar conexión cada 30 segundos
