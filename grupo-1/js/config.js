@@ -15,74 +15,74 @@
  */
 
 const CONFIG = {
-    // URL base de la API del backend
-    // âš ï¸ IMPORTANTE: Cambiar si tu backend estÃ¡ en otro puerto u otra URL
-    API_BASE_URL: 'http://localhost:8000/api/v1',
+  // URL base de la API del backend
+  // ⚠️ IMPORTANTE: Cambiar si tu backend está en otro puerto u otra URL
+  API_BASE_URL: 'http://localhost:8000',
 
-    // Nombre del grupo de estudiantes
-    // âš ï¸ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
-    // Este valor se envÃ­a en peticiones POST/PUT para identificar quiÃ©n hace la operaciÃ³n
-    GRUPO_ESTUDIANTES: 'GRUPO_1',
+  // Nombre del grupo de estudiantes
+  // âš ï¸ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
+  // Este valor se envÃ­a en peticiones POST/PUT para identificar quiÃ©n hace la operaciÃ³n
+  GRUPO_ESTUDIANTES: 'GRUPO_1',
 
-    // Tiempo mÃ¡ximo de espera para peticiones (en milisegundos)
-    TIMEOUT: 10000, // 10 segundos
+  // Tiempo mÃ¡ximo de espera para peticiones (en milisegundos)
+  TIMEOUT: 10000, // 10 segundos
 
-    // Mensajes de usuario
-    MENSAJES: {
-        ERROR_CONEXION: 'No se pudo conectar con el servidor. Verifica que el backend estÃ© ejecutÃ¡ndose.',
-        ERROR_GENERAL: 'OcurriÃ³ un error inesperado. Por favor, intenta nuevamente.',
-        EXITO_CREAR: 'Registro creado exitosamente',
-        EXITO_ACTUALIZAR: 'Registro actualizado exitosamente',
-        EXITO_ELIMINAR: 'Registro eliminado exitosamente',
-        CONFIRMACION_ELIMINAR: 'Â¿EstÃ¡s seguro de que deseas eliminar este registro?'
-    },
+  // Mensajes de usuario
+  MENSAJES: {
+    ERROR_CONEXION: 'No se pudo conectar con el servidor. Verifica que el backend estÃ© ejecutÃ¡ndose.',
+    ERROR_GENERAL: 'OcurriÃ³ un error inesperado. Por favor, intenta nuevamente.',
+    EXITO_CREAR: 'Registro creado exitosamente',
+    EXITO_ACTUALIZAR: 'Registro actualizado exitosamente',
+    EXITO_ELIMINAR: 'Registro eliminado exitosamente',
+    CONFIRMACION_ELIMINAR: 'Â¿EstÃ¡s seguro de que deseas eliminar este registro?',
+  },
 
-    // ConfiguraciÃ³n de paginaciÃ³n
-    ITEMS_POR_PAGINA: 10,
+  // ConfiguraciÃ³n de paginaciÃ³n
+  ITEMS_POR_PAGINA: 10,
 
-    // CategorÃ­as de productos (debe coincidir con el backend)
-    CATEGORIAS_PRODUCTOS: [
-        'ElectrÃ³nica',
-        'Ropa',
-        'Alimentos',
-        'Hogar',
-        'Deportes',
-        'Libros',
-        'Juguetes',
-        'Salud',
-        'Otros'
-    ],
+  // CategorÃ­as de productos (debe coincidir con el backend)
+  CATEGORIAS_PRODUCTOS: [
+    'ElectrÃ³nica',
+    'Ropa',
+    'Alimentos',
+    'Hogar',
+    'Deportes',
+    'Libros',
+    'Juguetes',
+    'Salud',
+    'Otros',
+  ],
 
-    // Ciudades disponibles para clientes
-    CIUDADES: [
-        'MedellÃ­n',
-        'BogotÃ¡',
-        'Cali',
-        'Barranquilla',
-        'Cartagena',
-        'Bucaramanga',
-        'Pereira',
-        'Manizales',
-        'Otra'
-    ]
+  // Ciudades disponibles para clientes
+  CIUDADES: [
+    'MedellÃ­n',
+    'BogotÃ¡',
+    'Cali',
+    'Barranquilla',
+    'Cartagena',
+    'Bucaramanga',
+    'Pereira',
+    'Manizales',
+    'Otra',
+  ],
 };
 
 /**
- * FunciÃ³n auxiliar para construir URLs completas de endpoints
+ * Función auxiliar para construir URLs completas de endpoints
  *
  * @param {string} endpoint - El endpoint relativo (ej: '/productos/')
- * @returns {string} - URL completa (ej: 'http://localhost:8000/api/v1/productos/')
+ * @returns {string} - URL completa (ej: 'http://localhost:8000/productos/')
  *
  * Ejemplo de uso:
- * const url = buildURL('/productos/'); // 'http://localhost:8000/api/v1/productos/'
+ * const url = buildURL('/productos/'); // 'http://localhost:8000/productos/'
  */
 function buildURL(endpoint) {
-    // Asegurarse de que el endpoint comience con '/'
-    if (!endpoint.startsWith('/')) {
-        endpoint = '/' + endpoint;
-    }
+  // Asegurarse de que el endpoint comience con '/'
+  if (!endpoint.startsWith('/')) {
+    endpoint = '/' + endpoint;
+  }
 
-    return `${CONFIG.API_BASE_URL}${endpoint}`;
+  return `${CONFIG.API_BASE_URL}${endpoint}`;
 }
 
 /**
@@ -94,17 +94,17 @@ function buildURL(endpoint) {
  * no estÃ¡ ejecutÃ¡ndose.
  */
 async function verificarConexionBackend() {
-    try {
-        const response = await fetch(buildURL('/productos/'), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+  try {
+    const response = await fetch(buildURL('/productos/'), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return response.ok;
-    } catch (error) {
-        console.error('Error al verificar conexiÃ³n con backend:', error);
-        return false;
-    }
+    return response.ok;
+  } catch (error) {
+    console.error('Error al verificar conexiÃ³n con backend:', error);
+    return false;
+  }
 }
 
 // ============================================
@@ -116,4 +116,3 @@ async function verificarConexionBackend() {
 // En un proyecto con mÃ³dulos ES6, usarÃ­amos: export default CONFIG;
 
 console.log('âœ… ConfiguraciÃ³n cargada:', CONFIG);
-

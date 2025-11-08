@@ -138,7 +138,7 @@ async function buscarProductosPorNombre(nombre) {
     try {
         mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/buscar/${encodeURIComponent(nombre)}`), {
+        const response = await fetch(buildURL('/productos/buscar/nombre') + `?query=${encodeURIComponent(nombre)}`, {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
         });
@@ -166,7 +166,7 @@ async function filtrarProductosPorCategoria(categoria) {
     try {
         mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/categoria/${encodeURIComponent(categoria)}`), {
+        const response = await fetch(buildURL('/productos/') + `?categoria=${encodeURIComponent(categoria)}`, {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
         });

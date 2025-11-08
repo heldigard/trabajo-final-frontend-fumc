@@ -17,7 +17,7 @@
 const CONFIG = {
     // URL base de la API del backend
     // âš ï¸ IMPORTANTE: Cambiar si tu backend estÃ¡ en otro puerto u otra URL
-    API_BASE_URL: 'http://localhost:8000/api/v1',
+    API_BASE_URL: 'http://localhost:8000',
 
     // Nombre del grupo de estudiantes
     // âš ï¸ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
@@ -71,10 +71,10 @@ const CONFIG = {
  * FunciÃ³n auxiliar para construir URLs completas de endpoints
  *
  * @param {string} endpoint - El endpoint relativo (ej: '/productos/')
- * @returns {string} - URL completa (ej: 'http://localhost:8000/api/v1/productos/')
+ * @returns {string} - URL completa (ej: 'http://localhost:8000/productos/')
  *
  * Ejemplo de uso:
- * const url = buildURL('/productos/'); // 'http://localhost:8000/api/v1/productos/'
+ * const url = buildURL('/productos/'); // 'http://localhost:8000/productos/'
  */
 function buildURL(endpoint) {
     // Asegurarse de que el endpoint comience con '/'

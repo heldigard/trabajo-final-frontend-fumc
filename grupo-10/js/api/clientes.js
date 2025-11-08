@@ -85,7 +85,7 @@ async function buscarClientes(termino) {
     try {
         mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/buscar/${encodeURIComponent(termino)}`), {
+        const response = await fetch(buildURL('/clientes/buscar/nombre') + `?query=${encodeURIComponent(termino)}`, {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
         });
@@ -113,7 +113,7 @@ async function filtrarClientesPorCiudad(ciudad) {
     try {
         mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/ciudad/${encodeURIComponent(ciudad)}`), {
+        const response = await fetch(buildURL('/clientes/') + `?ciudad=${encodeURIComponent(ciudad)}`, {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
         });
@@ -129,19 +129,19 @@ async function filtrarClientesPorCiudad(ciudad) {
 }
 
 /**
- * 5. Buscar cliente por documento
+ * 5. Buscar cliente por email
  *
- * @param {string} documento - Número de documento
+ * @param {string} email - Email del cliente
  * @returns {Promise<Object>} - Cliente encontrado
  *
  * Ejemplo de uso:
- * const cliente = await buscarClientePorDocumento('1234567890');
+ * const cliente = await buscarClientePorEmail('1234567890');
  */
-async function buscarClientePorDocumento(documento) {
+async function buscarClientePorEmail(email) {
     try {
         mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/documento/${encodeURIComponent(documento)}`), {
+        const response = await fetch(buildURL(`/clientes/buscar/email/${encodeURIComponent(email)}`), {
             method: 'GET',
             signal: AbortSignal.timeout(CONFIG.TIMEOUT)
         });
@@ -149,7 +149,7 @@ async function buscarClientePorDocumento(documento) {
         return await manejarRespuesta(response);
 
     } catch (error) {
-        console.error(`Error al buscar cliente por documento "${documento}":`, error);
+        console.error(`Error al buscar cliente por email "${email}":`, error);
         throw error;
     } finally {
         mostrarCargando(false);

@@ -33,22 +33,22 @@
  * @returns {Promise<Object>} - Datos parseados o lanza error
  */
 async function manejarRespuesta(response) {
-    if (!response.ok) {
-        // Intentar obtener mensaje de error del backend
-        let mensajeError = CONFIG.MENSAJES.ERROR_GENERAL;
+  if (!response.ok) {
+    // Intentar obtener mensaje de error del backend
+    let mensajeError = CONFIG.MENSAJES.ERROR_GENERAL;
 
-        try {
-            const errorData = await response.json();
-            mensajeError = errorData.detail || errorData.message || mensajeError;
-        } catch {
-            // Si no se puede parsear, usar mensaje genérico
-            mensajeError = `Error ${response.status}: ${response.statusText}`;
-        }
-
-        throw new Error(mensajeError);
+    try {
+      const errorData = await response.json();
+      mensajeError = errorData.detail || errorData.message || mensajeError;
+    } catch {
+      // Si no se puede parsear, usar mensaje genérico
+      mensajeError = `Error ${response.status}: ${response.statusText}`;
     }
 
-    return await response.json();
+    throw new Error(mensajeError);
+  }
+
+  return await response.json();
 }
 
 /**
@@ -57,10 +57,10 @@ async function manejarRespuesta(response) {
  * @param {boolean} mostrar - true para mostrar, false para ocultar
  */
 function mostrarCargando(mostrar) {
-    const spinner = document.getElementById('spinner-carga');
-    if (spinner) {
-        spinner.style.display = mostrar ? 'block' : 'none';
-    }
+  const spinner = document.getElementById('spinner-carga');
+  if (spinner) {
+    spinner.style.display = mostrar ? 'block' : 'none';
+  }
 }
 
 // ============================================
@@ -77,23 +77,22 @@ function mostrarCargando(mostrar) {
  * console.log(productos); // [{ id: 1, nombre: 'Laptop', ... }, ...]
  */
 async function obtenerTodosLosProductos() {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL('/productos/'), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/productos/'), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        const data = await manejarRespuesta(response);
-        return data;
-
-    } catch (error) {
-        console.error('Error al obtener productos:', error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    const data = await manejarRespuesta(response);
+    return data;
+  } catch (error) {
+    console.error('Error al obtener productos:', error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -107,22 +106,21 @@ async function obtenerTodosLosProductos() {
  * console.log(producto.nombre); // 'Laptop'
  */
 async function obtenerProductoPorId(id) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/${id}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/productos/${id}`), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al obtener producto ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al obtener producto ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -135,22 +133,21 @@ async function obtenerProductoPorId(id) {
  * const resultados = await buscarProductosPorNombre('laptop');
  */
 async function buscarProductosPorNombre(nombre) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/buscar/${encodeURIComponent(nombre)}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/productos/buscar/nombre') + `?query=${encodeURIComponent(nombre)}`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al buscar productos por nombre "${nombre}":`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al buscar productos por nombre "${nombre}":`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -163,22 +160,21 @@ async function buscarProductosPorNombre(nombre) {
  * const electronicos = await filtrarProductosPorCategoria('Electrónica');
  */
 async function filtrarProductosPorCategoria(categoria) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/categoria/${encodeURIComponent(categoria)}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/productos/') + `?categoria=${encodeURIComponent(categoria)}`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al filtrar productos por categoría "${categoria}":`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al filtrar productos por categoría "${categoria}":`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -299,38 +295,37 @@ async function filtrarProductosPorCategoria(categoria) {
  * ✅ El producto se guarda correctamente en el backend
  */
 async function crearProducto(producto) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        // TODO: RETO 7 - Parte 1: Crear copia del producto con spread operator
-        // const productoConFirma = { ...producto };
+    // TODO: RETO 7 - Parte 1: Crear copia del producto con spread operator
+    // const productoConFirma = { ...producto };
 
-        // TODO: RETO 7 - Parte 2: Agregar firma a la descripción
-        // productoConFirma.descripcion = `${producto.descripcion || ''} [Creado por ${CONFIG.GRUPO_ESTUDIANTES}]`;
+    // TODO: RETO 7 - Parte 2: Agregar firma a la descripción
+    // productoConFirma.descripcion = `${producto.descripcion || ''} [Creado por ${CONFIG.GRUPO_ESTUDIANTES}]`;
 
-        // TODO: RETO 7 - Parte 3 (OPCIONAL): Verificar longitud máxima
-        // if (productoConFirma.descripcion.length > 250) {
-        //     productoConFirma.descripcion = productoConFirma.descripcion.substring(0, 250);
-        // }
+    // TODO: RETO 7 - Parte 3 (OPCIONAL): Verificar longitud máxima
+    // if (productoConFirma.descripcion.length > 250) {
+    //     productoConFirma.descripcion = productoConFirma.descripcion.substring(0, 250);
+    // }
 
-        const response = await fetch(buildURL('/productos/'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            // TODO: RETO 7 - Parte 4: Cambiar 'producto' por 'productoConFirma'
-            body: JSON.stringify(producto),
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/productos/'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // TODO: RETO 7 - Parte 4: Cambiar 'producto' por 'productoConFirma'
+      body: JSON.stringify(producto),
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error('Error al crear producto:', error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error('Error al crear producto:', error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -403,29 +398,28 @@ async function crearProducto(producto) {
  * ✅ Los cambios se guardan correctamente
  */
 async function actualizarProductoCompleto(id, producto) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        // TODO: RETO 7 - Igual que en POST, pero con "Editado" en lugar de "Creado"
+    // TODO: RETO 7 - Igual que en POST, pero con "Editado" en lugar de "Creado"
 
-        const response = await fetch(buildURL(`/productos/${id}`), {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            // TODO: RETO 7 - Cambiar 'producto' por 'productoConFirma'
-            body: JSON.stringify(producto),
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/productos/${id}`), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // TODO: RETO 7 - Cambiar 'producto' por 'productoConFirma'
+      body: JSON.stringify(producto),
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al actualizar producto ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al actualizar producto ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -442,26 +436,25 @@ async function actualizarProductoCompleto(id, producto) {
  * await actualizarProductoParcial(15, { precio: 2200000, stock: 5 });
  */
 async function actualizarProductoParcial(id, camposActualizar) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/${id}`), {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(camposActualizar),
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/productos/${id}`), {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(camposActualizar),
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al actualizar parcialmente producto ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al actualizar parcialmente producto ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -479,22 +472,21 @@ async function actualizarProductoParcial(id, camposActualizar) {
  * // El producto ahora tiene activo=false
  */
 async function eliminarProducto(id) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/productos/${id}`), {
-            method: 'DELETE',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/productos/${id}`), {
+      method: 'DELETE',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al eliminar producto ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al eliminar producto ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 // ============================================

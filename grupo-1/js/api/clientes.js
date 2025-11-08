@@ -28,22 +28,21 @@
  * @returns {Promise<Array>} - Array de clientes
  */
 async function obtenerTodosLosClientes() {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL('/clientes/'), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/clientes/'), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error('Error al obtener clientes:', error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error('Error al obtener clientes:', error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -53,22 +52,21 @@ async function obtenerTodosLosClientes() {
  * @returns {Promise<Object>} - Datos del cliente
  */
 async function obtenerClientePorId(id) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/${id}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/clientes/${id}`), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al obtener cliente ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al obtener cliente ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -82,22 +80,21 @@ async function obtenerClientePorId(id) {
  * // Devuelve clientes con 'juan' en nombre o email
  */
 async function buscarClientes(termino) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/buscar/${encodeURIComponent(termino)}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/clientes/buscar/nombre') + `?query=${encodeURIComponent(termino)}`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al buscar clientes con término "${termino}":`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al buscar clientes con término "${termino}":`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -110,50 +107,48 @@ async function buscarClientes(termino) {
  * const clientesMedellin = await filtrarClientesPorCiudad('Medellín');
  */
 async function filtrarClientesPorCiudad(ciudad) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/ciudad/${encodeURIComponent(ciudad)}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/clientes/') + `?ciudad=${encodeURIComponent(ciudad)}`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al filtrar clientes por ciudad "${ciudad}":`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al filtrar clientes por ciudad "${ciudad}":`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
- * 5. Buscar cliente por documento
+ * 5. Buscar cliente por email
  *
- * @param {string} documento - Número de documento
+ * @param {string} email - Email del cliente
  * @returns {Promise<Object>} - Cliente encontrado
  *
  * Ejemplo de uso:
- * const cliente = await buscarClientePorDocumento('1234567890');
+ * const cliente = await buscarClientePorEmail('juan@example.com');
  */
-async function buscarClientePorDocumento(documento) {
-    try {
-        mostrarCargando(true);
+async function buscarClientePorEmail(email) {
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/documento/${encodeURIComponent(documento)}`), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/clientes/buscar/email/${encodeURIComponent(email)}`), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al buscar cliente por documento "${documento}":`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al buscar cliente por email "${email}":`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -183,26 +178,25 @@ async function buscarClientePorDocumento(documento) {
  * const creado = await crearCliente(nuevoCliente);
  */
 async function crearCliente(cliente) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL('/clientes/'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(cliente),
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL('/clientes/'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cliente),
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error('Error al crear cliente:', error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error('Error al crear cliente:', error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -215,26 +209,25 @@ async function crearCliente(cliente) {
  * ⚠️ IMPORTANTE: PUT requiere enviar TODOS los campos
  */
 async function actualizarClienteCompleto(id, cliente) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/${id}`), {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(cliente),
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/clientes/${id}`), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cliente),
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al actualizar cliente ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al actualizar cliente ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -249,26 +242,25 @@ async function actualizarClienteCompleto(id, cliente) {
  * await actualizarClienteParcial(10, { telefono: '3009876543', ciudad: 'Bogotá' });
  */
 async function actualizarClienteParcial(id, camposActualizar) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/${id}`), {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(camposActualizar),
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/clientes/${id}`), {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(camposActualizar),
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al actualizar parcialmente cliente ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al actualizar parcialmente cliente ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 /**
@@ -280,22 +272,21 @@ async function actualizarClienteParcial(id, camposActualizar) {
  * ⚠️ IMPORTANTE: Eliminación LÓGICA, el cliente se marca como inactivo
  */
 async function eliminarCliente(id) {
-    try {
-        mostrarCargando(true);
+  try {
+    mostrarCargando(true);
 
-        const response = await fetch(buildURL(`/clientes/${id}`), {
-            method: 'DELETE',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+    const response = await fetch(buildURL(`/clientes/${id}`), {
+      method: 'DELETE',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return await manejarRespuesta(response);
-
-    } catch (error) {
-        console.error(`Error al eliminar cliente ${id}:`, error);
-        throw error;
-    } finally {
-        mostrarCargando(false);
-    }
+    return await manejarRespuesta(response);
+  } catch (error) {
+    console.error(`Error al eliminar cliente ${id}:`, error);
+    throw error;
+  } finally {
+    mostrarCargando(false);
+  }
 }
 
 // ============================================
@@ -312,8 +303,8 @@ async function eliminarCliente(id) {
  * El backend también valida, pero esto mejora la experiencia del usuario.
  */
 function validarEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
 }
 
 /**
@@ -328,11 +319,11 @@ function validarEmail(email) {
  * - 300 123 4567
  */
 function validarTelefono(telefono) {
-    // Remover espacios y guiones
-    const telefonoLimpio = telefono.replace(/[\s-]/g, '');
+  // Remover espacios y guiones
+  const telefonoLimpio = telefono.replace(/[\s-]/g, '');
 
-    // Validar 10 dígitos que comiencen con 3 (celulares) o 7 dígitos (fijos)
-    return /^3\d{9}$/.test(telefonoLimpio) || /^\d{7}$/.test(telefonoLimpio);
+  // Validar 10 dígitos que comiencen con 3 (celulares) o 7 dígitos (fijos)
+  return /^3\d{9}$/.test(telefonoLimpio) || /^\d{7}$/.test(telefonoLimpio);
 }
 
 /**
@@ -344,8 +335,8 @@ function validarTelefono(telefono) {
  * Acepta 6 a 10 dígitos
  */
 function validarDocumento(documento) {
-    const documentoLimpio = documento.replace(/\D/g, ''); // Remover no-dígitos
-    return documentoLimpio.length >= 6 && documentoLimpio.length <= 10;
+  const documentoLimpio = documento.replace(/\D/g, ''); // Remover no-dígitos
+  return documentoLimpio.length >= 6 && documentoLimpio.length <= 10;
 }
 
 // ============================================

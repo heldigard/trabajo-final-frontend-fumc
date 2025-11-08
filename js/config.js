@@ -15,74 +15,64 @@
  */
 
 const CONFIG = {
-    // URL base de la API del backend
-    // ⚠️ IMPORTANTE: Cambiar si tu backend está en otro puerto u otra URL
-    API_BASE_URL: 'http://localhost:8000/api/v1',
+  // URL base de la API del backend
+  // ⚠️ IMPORTANTE: Cambiar si tu backend está en otro puerto u otra URL
+  API_BASE_URL: 'http://localhost:8000',
 
-    // Nombre del grupo de estudiantes
-    // ⚠️ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
-    // Este valor se envía en peticiones POST/PUT para identificar quién hace la operación
-    GRUPO_ESTUDIANTES: 'GRUPO_1',
+  // Nombre del grupo de estudiantes
+  // ⚠️ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
+  // Este valor se envía en peticiones POST/PUT para identificar quién hace la operación
+  GRUPO_ESTUDIANTES: 'GRUPO_1',
 
-    // Tiempo máximo de espera para peticiones (en milisegundos)
-    TIMEOUT: 10000, // 10 segundos
+  // Tiempo máximo de espera para peticiones (en milisegundos)
+  TIMEOUT: 10000, // 10 segundos
 
-    // Mensajes de usuario
-    MENSAJES: {
-        ERROR_CONEXION: 'No se pudo conectar con el servidor. Verifica que el backend esté ejecutándose.',
-        ERROR_GENERAL: 'Ocurrió un error inesperado. Por favor, intenta nuevamente.',
-        EXITO_CREAR: 'Registro creado exitosamente',
-        EXITO_ACTUALIZAR: 'Registro actualizado exitosamente',
-        EXITO_ELIMINAR: 'Registro eliminado exitosamente',
-        CONFIRMACION_ELIMINAR: '¿Estás seguro de que deseas eliminar este registro?'
-    },
+  // Mensajes de usuario
+  MENSAJES: {
+    ERROR_CONEXION: 'No se pudo conectar con el servidor. Verifica que el backend esté ejecutándose.',
+    ERROR_GENERAL: 'Ocurrió un error inesperado. Por favor, intenta nuevamente.',
+    EXITO_CREAR: 'Registro creado exitosamente',
+    EXITO_ACTUALIZAR: 'Registro actualizado exitosamente',
+    EXITO_ELIMINAR: 'Registro eliminado exitosamente',
+    CONFIRMACION_ELIMINAR: '¿Estás seguro de que deseas eliminar este registro?',
+  },
 
-    // Configuración de paginación
-    ITEMS_POR_PAGINA: 10,
+  // Configuración de paginación
+  ITEMS_POR_PAGINA: 10,
 
-    // Categorías de productos (debe coincidir con el backend)
-    CATEGORIAS_PRODUCTOS: [
-        'Electrónica',
-        'Ropa',
-        'Alimentos',
-        'Hogar',
-        'Deportes',
-        'Libros',
-        'Juguetes',
-        'Salud',
-        'Otros'
-    ],
+  // Categorías de productos (debe coincidir con el backend)
+  CATEGORIAS_PRODUCTOS: [
+    'Electrónica',
+    'Ropa',
+    'Alimentos',
+    'Hogar',
+    'Deportes',
+    'Libros',
+    'Juguetes',
+    'Salud',
+    'Otros',
+  ],
 
-    // Ciudades disponibles para clientes
-    CIUDADES: [
-        'Medellín',
-        'Bogotá',
-        'Cali',
-        'Barranquilla',
-        'Cartagena',
-        'Bucaramanga',
-        'Pereira',
-        'Manizales',
-        'Otra'
-    ]
+  // Ciudades disponibles para clientes
+  CIUDADES: ['Medellín', 'Bogotá', 'Cali', 'Barranquilla', 'Cartagena', 'Bucaramanga', 'Pereira', 'Manizales', 'Otra'],
 };
 
 /**
  * Función auxiliar para construir URLs completas de endpoints
  *
  * @param {string} endpoint - El endpoint relativo (ej: '/productos/')
- * @returns {string} - URL completa (ej: 'http://localhost:8000/api/v1/productos/')
+ * @returns {string} - URL completa (ej: 'http://localhost:8000/productos/')
  *
  * Ejemplo de uso:
- * const url = buildURL('/productos/'); // 'http://localhost:8000/api/v1/productos/'
+ * const url = buildURL('/productos/'); // 'http://localhost:8000/productos/'
  */
 function buildURL(endpoint) {
-    // Asegurarse de que el endpoint comience con '/'
-    if (!endpoint.startsWith('/')) {
-        endpoint = '/' + endpoint;
-    }
+  // Asegurarse de que el endpoint comience con '/'
+  if (!endpoint.startsWith('/')) {
+    endpoint = '/' + endpoint;
+  }
 
-    return `${CONFIG.API_BASE_URL}${endpoint}`;
+  return `${CONFIG.API_BASE_URL}${endpoint}`;
 }
 
 /**
@@ -94,17 +84,17 @@ function buildURL(endpoint) {
  * no está ejecutándose.
  */
 async function verificarConexionBackend() {
-    try {
-        const response = await fetch(buildURL('/productos/'), {
-            method: 'GET',
-            signal: AbortSignal.timeout(CONFIG.TIMEOUT)
-        });
+  try {
+    const response = await fetch(buildURL('/productos/'), {
+      method: 'GET',
+      signal: AbortSignal.timeout(CONFIG.TIMEOUT),
+    });
 
-        return response.ok;
-    } catch (error) {
-        console.error('Error al verificar conexión con backend:', error);
-        return false;
-    }
+    return response.ok;
+  } catch (error) {
+    console.error('Error al verificar conexión con backend:', error);
+    return false;
+  }
 }
 
 // ============================================
