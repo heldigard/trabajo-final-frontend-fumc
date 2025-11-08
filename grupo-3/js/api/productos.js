@@ -58,11 +58,22 @@ async function manejarRespuesta(response) {
  */
 function mostrarSpinnerGlobal(mostrar) {
   const spinner = document.getElementById('spinner-carga');
-  if (spinner) {
-    spinner.style.display = mostrar ? 'flex' : 'none';
-  }
-}
+  if (!spinner) return;
 
+  if (typeof mostrar === 'boolean') {
+    spinner.style.display = mostrar ? 'flex' : 'none';
+    return;
+  }
+
+  if (typeof mostrar === 'string') {
+    const p = spinner.querySelector('p');
+    if (p) p.textContent = mostrar;
+    spinner.style.display = 'flex';
+    return;
+  }
+
+  spinner.style.display = 'flex';
+}
 // ============================================
 // FUNCIONES DE API - PRODUCTOS
 // ============================================
@@ -136,7 +147,7 @@ async function buscarProductosPorNombre(nombre) {
   try {
     mostrarSpinnerGlobal(true);
 
-    const response = await fetch(buildURL(`/productos/buscar/${encodeURIComponent(nombre)}`), {
+    const response = await fetch(buildURL('/productos/buscar/nombre') + `?query=${encodeURIComponent(nombre)}`, {
       method: 'GET',
       signal: AbortSignal.timeout(CONFIG.TIMEOUT),
     });
@@ -163,7 +174,7 @@ async function filtrarProductosPorCategoria(categoria) {
   try {
     mostrarSpinnerGlobal(true);
 
-    const response = await fetch(buildURL(`/productos/categoria/${encodeURIComponent(categoria)}`), {
+    const response = await fetch(buildURL('/productos/') + `?categoria=${encodeURIComponent(categoria)}`, {
       method: 'GET',
       signal: AbortSignal.timeout(CONFIG.TIMEOUT),
     });

@@ -37,7 +37,6 @@
                             id="buscar-cliente"
                             class="form-input"
                             placeholder="🔍 Buscar por nombre o email..."
-                            onkeyup="buscarCliente()"
                         >
                     </div>
 
@@ -112,11 +111,12 @@
                             </tr>
                         </thead>
                         <tbody id="tbody-clientes">
-                            <tr>
+                            <tr id="loading-clientes">
                                 <td colspan="8" class="text-center">
-                                    <p style="padding: 2rem; color: var(--texto-secundario);">
-                                        Cargando clientes...
-                                    </p>
+                                    <div class="spinner-container">
+                                        <div class="spinner"></div>
+                                        <p>Cargando clientes...</p>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

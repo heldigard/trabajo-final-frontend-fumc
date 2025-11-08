@@ -34,7 +34,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 function configurarEventos() {
     // Búsqueda
-    const inputBusqueda = document.getElementById('busqueda-cliente');
+    const inputBusqueda = document.getElementById('buscar-cliente');
     if (inputBusqueda) {
         inputBusqueda.addEventListener('input', filtrarClientes);
     }
@@ -59,6 +59,8 @@ function configurarEventos() {
 
 async function cargarClientes() {
     try {
+        // Mostrar spinner global (overlay) y spinner en la tabla
+        mostrarSpinnerGlobal(true);
         mostrarSpinner('tbody-clientes', 8);
 
         clientesGlobales = await obtenerTodosLosClientes();
@@ -72,6 +74,10 @@ async function cargarClientes() {
         console.error('❌ Error al cargar clientes:', error);
         mostrarTablaVacia('tbody-clientes', '❌ Error al cargar clientes. Verifica el backend.', 8);
     }
+    finally {
+        // Asegurar ocultar el spinner global en cualquier caso
+        try { ocultarSpinnerGlobal(); } catch (e) { /* noop */ }
+    }
 }
 
 // ============================================
@@ -79,7 +85,7 @@ async function cargarClientes() {
 // ============================================
 
 function filtrarClientes() {
-    const termino = document.getElementById('busqueda-cliente')?.value.toLowerCase() || '';
+    const termino = document.getElementById('buscar-cliente')?.value.toLowerCase() || '';
     const ciudadFiltro = document.getElementById('filtro-ciudad')?.value || 'todos';
     const estadoFiltro = document.getElementById('filtro-estado')?.value || 'todos';
 
@@ -340,14 +346,10 @@ async function confirmarEliminarCliente(id) {
     try {
         const cliente = await obtenerClientePorId(id);
 
-        console.log('📋 Mostrando modal de confirmación para:', cliente.nombre);
-
         const confirmado = await mostrarConfirmacion(
             '¿Eliminar cliente?',
             `¿Estás seguro de eliminar al cliente "${cliente.nombre}"?`
         );
-
-        console.log('✅ Resultado de confirmación:', confirmado);
 
         if (confirmado) {
             // Mostrar spinner mientras se elimina
@@ -366,7 +368,6 @@ async function confirmarEliminarCliente(id) {
         // Asegurarse de ocultar el spinner en caso de error
         ocultarSpinnerGlobal();
 
-        console.error('❌ Error en confirmarEliminarCliente:', error);
         mostrarAlerta('Error', 'No se pudo eliminar el cliente', 'error');
     }
 }

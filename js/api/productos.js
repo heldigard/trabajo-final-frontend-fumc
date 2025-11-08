@@ -58,10 +58,26 @@ async function manejarRespuesta(response) {
  */
 function mostrarSpinnerGlobal(mostrar) {
   const spinner = document.getElementById('spinner-carga');
-  if (spinner) {
+  if (!spinner) return;
+
+  // Compatibilidad: si se pasa un booleano, se interpreta como mostrar/ocultar
+  if (typeof mostrar === 'boolean') {
     spinner.style.display = mostrar ? 'flex' : 'none';
+    return;
   }
-} // ============================================
+
+  // Si se pasa una cadena, actualizar el texto y mostrar
+  if (typeof mostrar === 'string') {
+    const p = spinner.querySelector('p');
+    if (p) p.textContent = mostrar;
+    spinner.style.display = 'flex';
+    return;
+  }
+
+  // Por defecto, mostrar
+  spinner.style.display = 'flex';
+}
+// ============================================
 // FUNCIONES DE API - PRODUCTOS
 // ============================================
 

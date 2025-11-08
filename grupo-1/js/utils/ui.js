@@ -175,13 +175,20 @@ function limpiarFormulario(idFormulario) {
  */
 function mostrarSpinnerGlobal(mensaje = 'Cargando...') {
     const spinner = document.getElementById('spinner-carga');
-    if (spinner) {
-        const mensajeElemento = spinner.querySelector('p');
-        if (mensajeElemento) {
-            mensajeElemento.textContent = mensaje;
-        }
-        spinner.style.display = 'flex';
+    if (!spinner) return;
+
+    // Compatibilidad: si se pasa un booleano, se interpreta como mostrar/ocultar
+    if (typeof mensaje === 'boolean') {
+        spinner.style.display = mensaje ? 'flex' : 'none';
+        return;
     }
+
+    // Si se pasa una cadena, actualizar el texto y mostrar
+    const p = spinner.querySelector('p');
+    if (p) {
+        p.textContent = mensaje;
+    }
+    spinner.style.display = 'flex';
 }
 
 /**

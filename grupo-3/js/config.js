@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // CONFIGURACIÃ“N GLOBAL DE LA APLICACIÃ“N
 // ============================================
 
@@ -20,7 +20,7 @@ const CONFIG = {
   API_BASE_URL: 'http://localhost:8000',
 
   // Nombre del grupo de estudiantes
-  // âš ï¸ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
+  // âš ï¸ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_3, GRUPO_3, etc.
   // Este valor se envÃ­a en peticiones POST/PUT para identificar quiÃ©n hace la operaciÃ³n
   GRUPO_ESTUDIANTES: 'GRUPO_3',
 

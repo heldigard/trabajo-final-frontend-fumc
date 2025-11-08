@@ -10,6 +10,12 @@
     <!-- Navbar se inyecta aquí -->
     <div id="navbar-container"></div>
 
+    <!-- SPINNER DE CARGA GLOBAL (overlay central) -->
+    <div id="spinner-carga" class="spinner-container">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
     <main class="container">
         <header class="page-header fade-in">
             <div>
@@ -166,10 +172,12 @@
                             </tr>
                         </thead>
                         <tbody id="tbody-auditoria">
-                            <tr>
+                            <tr id="loading-auditoria">
                                 <td colspan="8" class="text-center">
-                                    <div class="spinner"></div>
-                                    <p>Cargando historial de auditoría...</p>
+                                    <div class="spinner-container">
+                                        <div class="spinner"></div>
+                                        <p>Cargando historial de auditoría...</p>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

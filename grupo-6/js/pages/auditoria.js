@@ -48,6 +48,8 @@ function configurarEventos() {
 
 async function cargarHistorial() {
     try {
+        // Mostrar spinner global (overlay) y spinner dentro de la tabla
+        mostrarSpinnerGlobal(true);
         mostrarSpinner('tbody-auditoria', 6);
 
         historialCompleto = await obtenerTodoHistorial();
@@ -61,6 +63,10 @@ async function cargarHistorial() {
     } catch (error) {
         console.error('❌ Error al cargar historial:', error);
         mostrarTablaVacia('tbody-auditoria', '❌ Error al cargar historial', 6);
+    }
+    finally {
+        // Asegurar ocultar el spinner global en cualquier caso
+        try { ocultarSpinnerGlobal(); } catch (e) { /* noop */ }
     }
 }
 
