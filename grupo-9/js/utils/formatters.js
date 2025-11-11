@@ -60,9 +60,9 @@
  * @returns {string} Precio formateado como "$2.500.000"
  */
 function formatearPrecio(precio) {
-    return new Intl.NumberFormat('es-CO', {
+    return new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'COP',
+        currency: 'USD',
         minimumFractionDigits: 0 // Sin centavos
     }).format(precio);
 }

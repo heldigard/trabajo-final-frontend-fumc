@@ -68,9 +68,9 @@ function validarDatosProducto(datos) {
     }
 
     // TODO: RETO 1 - Descomenta las siguientes 3 líneas:
-    // if (isNaN(datos.stock) || datos.stock < 0) {
-    //     errores.push('El stock no puede ser negativo');
-    // }
+     if (isNaN(datos.stock) || datos.stock < 0) {
+        errores.push('El stock no puede ser negativo');
+     }
 
     // Validar categoría
     if (!datos.categoria || datos.categoria === '') {
