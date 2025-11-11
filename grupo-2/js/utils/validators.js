@@ -66,6 +66,12 @@ function validarDatosProducto(datos) {
     if (isNaN(datos.precio) || datos.precio <= 0) {
         errores.push('El precio debe ser mayor a 0');
     }
+    //validar stock Grupo2
+    if (producto.stock < 0) {
+        alert("El stock no puede ser negativo");
+        return false;
+    }
+
 
     // TODO: RETO 1 - Descomenta las siguientes 3 líneas:
     // if (isNaN(datos.stock) || datos.stock < 0) {

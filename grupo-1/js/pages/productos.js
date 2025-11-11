@@ -163,7 +163,7 @@ function filtrarProductos() {
     productosFiltrados = productosGlobales.filter(producto => {
         // Filtro de búsqueda (nombre)
         // TODO: RETO 4 - Modifica esta línea para buscar también en descripción
-        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino);
+        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino) || producto.descripcion?.toLowerCase().includes(termino);
 
         // Filtro de categoría
         const cumpleCategoria = categoriaFiltro === 'todos' || producto.categoria === categoriaFiltro;
