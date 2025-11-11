@@ -22,7 +22,7 @@ const CONFIG = {
   // Nombre del grupo de estudiantes
   // ⚠️ CAMBIAR POR TU GRUPO: GRUPO_1, GRUPO_2, GRUPO_3, etc.
   // Este valor se envía en peticiones POST/PUT para identificar quién hace la operación
-  GRUPO_ESTUDIANTES: 'GRUPO_1',
+  GRUPO_ESTUDIANTES: 'GRUPO_10',
 
   // Tiempo máximo de espera para peticiones (en milisegundos)
   TIMEOUT: 10000, // 10 segundos
