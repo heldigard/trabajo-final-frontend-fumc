@@ -275,6 +275,16 @@ function crearFormularioCliente(cliente = null) {
 }
 
 // TODO: RETO 5 - Agregar función actualizarContadorNombre() aquí
+const inputNombre = document.getElementById('input-nombre');
+const contadorNombre = document.getElementById('contador-nombre');
+
+if (inputNombre && contadorNombre) {
+    inputNombre.addEventListener('input', () => {
+        const max = inputNombre.getAttribute('maxlength') || 100;
+        const len = inputNombre.value.length;
+        contadorNombre.textContent = `${len}/${max} caracteres`;
+    });
+}
 
 // ============================================
 // 7. MODAL EDITAR
