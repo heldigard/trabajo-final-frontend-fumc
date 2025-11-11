@@ -19,30 +19,34 @@
  * Clase Modal para crear y manejar ventanas modales
  */
 class Modal {
-    constructor(id, titulo, contenido, botones = []) {
-        this.id = id;
-        this.titulo = titulo;
-        this.contenido = contenido;
-        this.botones = botones;
-        this.elemento = null;
-    }
+  constructor(id, titulo, contenido, botones = []) {
+    this.id = id;
+    this.titulo = titulo;
+    this.contenido = contenido;
+    this.botones = botones;
+    this.elemento = null;
+  }
 
-    /**
-     * Crea el HTML del modal
-     *
-     * @returns {string} - HTML del modal
-     */
-    crearHTML() {
-        const botonesHTML = this.botones.map(boton => `
+  /**
+   * Crea el HTML del modal
+   *
+   * @returns {string} - HTML del modal
+   */
+  crearHTML() {
+    const botonesHTML = this.botones
+      .map(
+        boton => `
             <button
                 class="btn btn-${boton.tipo || 'primary'}"
                 data-accion="${boton.accion || 'cerrar'}"
             >
                 ${boton.texto}
             </button>
-        `).join('');
+        `,
+      )
+      .join('');
 
-        return `
+    return `
             <div class="modal-overlay" id="modal-${this.id}">
                 <div class="modal-contenido">
                     <!-- Encabezado -->
@@ -63,105 +67,105 @@ class Modal {
                 </div>
             </div>
         `;
-    }
+  }
 
-    /**
-     * Renderiza el modal en el DOM
-     */
-    renderizar() {
-        // Crear elemento temporal
-        const temp = document.createElement('div');
-        temp.innerHTML = this.crearHTML();
-        this.elemento = temp.firstElementChild;
+  /**
+   * Renderiza el modal en el DOM
+   */
+  renderizar() {
+    // Crear elemento temporal
+    const temp = document.createElement('div');
+    temp.innerHTML = this.crearHTML();
+    this.elemento = temp.firstElementChild;
 
-        // Agregar al body
-        document.body.appendChild(this.elemento);
+    // Agregar al body
+    document.body.appendChild(this.elemento);
 
-        // Configurar eventos
-        this.configurarEventos();
-    }
+    // Configurar eventos
+    this.configurarEventos();
+  }
 
-    /**
-     * Configura los eventos de clic en botones
-     */
-    configurarEventos() {
-        // Cerrar al hacer clic en el overlay (fondo oscuro)
-        this.elemento.addEventListener('click', (e) => {
-            if (e.target === this.elemento) {
-                this.cerrar();
-            }
-        });
+  /**
+   * Configura los eventos de clic en botones
+   */
+  configurarEventos() {
+    // Cerrar al hacer clic en el overlay (fondo oscuro)
+    this.elemento.addEventListener('click', e => {
+      if (e.target === this.elemento) {
+        this.cerrar();
+      }
+    });
 
-        // Manejar clics en botones
-        this.elemento.querySelectorAll('[data-accion]').forEach(boton => {
-            boton.addEventListener('click', (e) => {
-                const accion = e.target.dataset.accion;
+    // Manejar clics en botones
+    this.elemento.querySelectorAll('[data-accion]').forEach(boton => {
+      boton.addEventListener('click', e => {
+        const accion = e.target.dataset.accion;
 
-                if (accion === 'cerrar') {
-                    this.cerrar();
-                } else if (this.onAccion) {
-                    this.onAccion(accion, e);
-                }
-            });
-        });
-
-        // Cerrar con tecla Escape
-        this.escapeListener = (e) => {
-            if (e.key === 'Escape') {
-                this.cerrar();
-            }
-        };
-        document.addEventListener('keydown', this.escapeListener);
-    }
-
-    /**
-     * Muestra el modal
-     */
-    abrir() {
-        if (!this.elemento) {
-            this.renderizar();
+        if (accion === 'cerrar') {
+          this.cerrar();
+        } else if (this.onAccion) {
+          this.onAccion(accion, e);
         }
+      });
+    });
 
-        // Añadir clase para animación
-        setTimeout(() => {
-            this.elemento.classList.add('modal-abierto');
-        }, 10);
+    // Cerrar con tecla Escape
+    this.escapeListener = e => {
+      if (e.key === 'Escape') {
+        this.cerrar();
+      }
+    };
+    document.addEventListener('keydown', this.escapeListener);
+  }
 
-        // Bloquear scroll del body
-        document.body.style.overflow = 'hidden';
+  /**
+   * Muestra el modal
+   */
+  abrir() {
+    if (!this.elemento) {
+      this.renderizar();
     }
 
-    /**
-     * Cierra y destruye el modal
-     */
-    cerrar() {
-        this.elemento.classList.remove('modal-abierto');
+    // Añadir clase para animación
+    setTimeout(() => {
+      this.elemento.classList.add('modal-abierto');
+    }, 10);
 
-        // Esperar animación antes de eliminar
-        setTimeout(() => {
-            if (this.elemento && this.elemento.parentNode) {
-                this.elemento.parentNode.removeChild(this.elemento);
-            }
-            this.elemento = null;
+    // Bloquear scroll del body
+    document.body.style.overflow = 'hidden';
+  }
 
-            // Restaurar scroll
-            document.body.style.overflow = '';
+  /**
+   * Cierra y destruye el modal
+   */
+  cerrar() {
+    this.elemento.classList.remove('modal-abierto');
 
-            // Remover listener de Escape
-            if (this.escapeListener) {
-                document.removeEventListener('keydown', this.escapeListener);
-            }
-        }, 300);
-    }
+    // Esperar animación antes de eliminar
+    setTimeout(() => {
+      if (this.elemento && this.elemento.parentNode) {
+        this.elemento.parentNode.removeChild(this.elemento);
+      }
+      this.elemento = null;
 
-    /**
-     * Define el manejador de acciones
-     *
-     * @param {Function} callback - Función a ejecutar al hacer clic en botones
-     */
-    onAction(callback) {
-        this.onAccion = callback;
-    }
+      // Restaurar scroll
+      document.body.style.overflow = '';
+
+      // Remover listener de Escape
+      if (this.escapeListener) {
+        document.removeEventListener('keydown', this.escapeListener);
+      }
+    }, 300);
+  }
+
+  /**
+   * Define el manejador de acciones
+   *
+   * @param {Function} callback - Función a ejecutar al hacer clic en botones
+   */
+  onAction(callback) {
+    this.onAccion = callback;
+  }
 }
 
 // ============================================
@@ -185,40 +189,35 @@ class Modal {
  * }
  */
 function mostrarConfirmacion(titulo, mensaje) {
-    return new Promise((resolve) => {
-        const modal = new Modal(
-            'confirmacion',
-            titulo,
-            `<p>${mensaje}</p>`,
-            [
-                { texto: 'Cancelar', tipo: 'secondary', accion: 'cerrar' },
-                { texto: 'Confirmar', tipo: 'danger', accion: 'confirmar' }
-            ]
-        );
+  return new Promise(resolve => {
+    const modal = new Modal('confirmacion', titulo, `<p>${mensaje}</p>`, [
+      { texto: 'Cancelar', tipo: 'secondary', accion: 'cerrar' },
+      { texto: 'Confirmar', tipo: 'danger', accion: 'confirmar' },
+    ]);
 
-        let resuelto = false; // Flag para evitar múltiples resoluciones
+    let resuelto = false; // Flag para evitar múltiples resoluciones
 
-        modal.onAction((accion) => {
-            if (!resuelto) {
-                resuelto = true;
-                const confirmado = accion === 'confirmar';
-                resolve(confirmado);
-                modal.cerrar();
-            }
-        });
-
-        // Interceptar el cierre del modal (X o ESC)
-        const originalCerrar = modal.cerrar.bind(modal);
-        modal.cerrar = function() {
-            if (!resuelto) {
-                resuelto = true;
-                resolve(false);
-            }
-            originalCerrar();
-        };
-
-        modal.abrir();
+    modal.onAction(accion => {
+      if (!resuelto) {
+        resuelto = true;
+        const confirmado = accion === 'confirmar';
+        resolve(confirmado);
+        modal.cerrar();
+      }
     });
+
+    // Interceptar el cierre del modal (X o ESC)
+    const originalCerrar = modal.cerrar.bind(modal);
+    modal.cerrar = function () {
+      if (!resuelto) {
+        resuelto = true;
+        resolve(false);
+      }
+      originalCerrar();
+    };
+
+    modal.abrir();
+  });
 }
 
 /**
@@ -232,23 +231,18 @@ function mostrarConfirmacion(titulo, mensaje) {
  * mostrarAlerta('Éxito', 'Producto creado correctamente', 'success');
  */
 function mostrarAlerta(titulo, mensaje, tipo = 'info') {
-    const iconos = {
-        success: '✅',
-        error: '❌',
-        warning: '⚠️',
-        info: 'ℹ️'
-    };
+  const iconos = {
+    success: '✅',
+    error: '❌',
+    warning: '⚠️',
+    info: 'ℹ️',
+  };
 
-    const modal = new Modal(
-        'alerta',
-        `${iconos[tipo]} ${titulo}`,
-        `<p class="alerta-${tipo}">${mensaje}</p>`,
-        [
-            { texto: 'Aceptar', tipo: 'primary', accion: 'cerrar' }
-        ]
-    );
+  const modal = new Modal('alerta', `${iconos[tipo]} ${titulo}`, `<p class="alerta-${tipo}">${mensaje}</p>`, [
+    { texto: 'Aceptar', tipo: 'primary', accion: 'cerrar' },
+  ]);
 
-    modal.abrir();
+  modal.abrir();
 }
 
 /**
@@ -263,20 +257,60 @@ function mostrarAlerta(titulo, mensaje, tipo = 'info') {
  * modalCarga.cerrar();
  */
 function mostrarCargando(mensaje = 'Cargando...') {
-    const modal = new Modal(
-        'cargando',
-        '',
-        `
+  const modal = new Modal(
+    'cargando',
+    '',
+    `
             <div class="spinner-container">
                 <div class="spinner"></div>
                 <p>${mensaje}</p>
             </div>
         `,
-        [] // Sin botones
-    );
+    [], // Sin botones
+  );
 
-    modal.abrir();
-    return modal;
+  modal.abrir();
+  return modal;
+}
+
+/**
+ * Crea un modal con formulario
+ *
+ * @param {string} titulo - Título del modal
+ * @param {string} contenidoHTML - HTML del formulario
+ * @param {Function} onGuardar - Función a ejecutar al guardar
+ * @returns {Modal} - Instancia del modal
+ *
+ * Ejemplo de uso:
+ * const modal = crearModalFormulario(
+ *     'Crear Producto',
+ *     '<input type="text" id="nombre" />',
+ *     async () => {
+ *         // Guardar datos
+ *         return true; // Retornar true para cerrar el modal
+ *     }
+ * );
+ * modal.abrir();
+ */
+function crearModalFormulario(titulo, contenidoHTML, onGuardar) {
+  const modal = new Modal('formulario', titulo, contenidoHTML, [
+    { texto: 'Cancelar', tipo: 'secondary', accion: 'cerrar' },
+    { texto: 'Guardar', tipo: 'primary', accion: 'guardar' },
+  ]);
+
+  modal.onAction(async accion => {
+    if (accion === 'guardar') {
+      // Ejecutar función de guardado
+      const deberraCerrar = await onGuardar();
+
+      // Solo cerrar si la función devuelve true
+      if (deberraCerrar === true) {
+        modal.cerrar();
+      }
+    }
+  });
+
+  return modal;
 }
 
 // ============================================
