@@ -139,12 +139,12 @@ Abre el archivo `js/config.js` y cambia el nombre de tu grupo:
 
 ```javascript
 // 📍 LÍNEA 22 de js/config.js
-GRUPO_ESTUDIANTES: 'GRUPO_1',  // ⚠️ CAMBIAR POR TU GRUPO
+GRUPO_ESTUDIANTES: 'GRUPO_12',  // ⚠️ CAMBIAR POR TU GRUPO
 ```
 
 **Cambiar por:**
 ```javascript
-GRUPO_ESTUDIANTES: 'GRUPO_3',  // Si eres del grupo 3
+GRUPO_ESTUDIANTES: 'GRUPO_12',  // Si eres del grupo 3
 ```
 
 ### Paso 2: Verificar que el Backend esté Corriendo

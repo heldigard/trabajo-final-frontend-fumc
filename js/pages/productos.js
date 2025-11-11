@@ -441,6 +441,7 @@ async function confirmarEliminarProducto(id) {
         const confirmado = await mostrarConfirmacion(
             '¿Eliminar producto?',
             '¿Estás seguro de eliminar este producto?'
+            
         );
 
         if (confirmado) {
