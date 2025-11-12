@@ -271,44 +271,49 @@ body {
    ============================================ */
 
 .form-group {
-    margin-bottom: var(--espaciado-md);
+    margin-bottom: var(--espaciado-sm);
 }
 
-.form-label {
+.form-group label {
     display: block;
-    margin-bottom: var(--espaciado-xs);
     font-weight: 500;
+    margin-bottom: 0.25rem;
     color: var(--texto-principal);
 }
 
-.form-input,
-.form-select,
-.form-textarea {
-    width: 100%;
-    padding: var(--espaciado-xs) var(--espaciado-sm);
-    border: 2px solid var(--borde-color);
-    border-radius: var(--border-radius-md);
-    font-size: 1rem;
-    transition: border-color var(--transition-rapida);
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--espaciado-sm);
 }
 
-.form-input:focus,
+.form-control,
+.form-select,
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--borde-color);
+    font-size: 0.95rem;
+    transition: all var(--transition-rapida);
+    background-color: #f9fafb;
+}
+
+.form-control:focus,
 .form-select:focus,
-.form-textarea:focus {
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
     outline: none;
     border-color: var(--color-primario);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.15);
+    background-color: #ffffff;
 }
 
-.form-input.error,
-.form-select.error {
-    border-color: var(--color-peligro);
-}
-
-.form-error {
-    color: var(--color-peligro);
-    font-size: 0.875rem;
-    margin-top: var(--espaciado-xs);
-}
 
 /* ============================================
    TABLAS
@@ -428,13 +433,107 @@ body {
    SPINNER DE CARGA
    ============================================ */
 
+/* ============================================
+   SPINNER GLOBAL
+   ============================================ */
+
 .spinner-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+}
+
+/* ============================================
+   MODALES
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.modal-overlay.modal-abierto {
+    opacity: 1;
+}
+
+.modal-contenido {
+    background: var(--bg-tarjeta);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--sombra-grande);
+    padding: var(--espaciado-md);
+    width: min(520px, 92vw);
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--espaciado-md);
-    padding: var(--espaciado-xl);
+    gap: var(--espaciado-sm);
+    transform: translateY(20px);
+    transition: all var(--transition-normal);
 }
+
+.modal-abierto .modal-contenido {
+    transform: translateY(0);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid var(--borde-color);
+    padding-bottom: 0.5rem;
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modal-cerrar {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--texto-secundario);
+}
+
+.modal-cerrar:hover {
+    color: var(--color-peligro);
+}
+
+.modal-body {
+    padding: var(--espaciado-sm) 0;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--borde-color);
+}
+
+.modal-body .form-group,
+.modal-body .form-row {
+    margin-bottom: 0.75rem;
+}
+
 
 .spinner {
     width: 50px;

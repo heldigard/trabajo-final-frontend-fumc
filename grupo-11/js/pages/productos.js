@@ -362,7 +362,7 @@ async function guardarProducto() {
             mostrarAlerta('Éxito', 'Producto actualizado correctamente', 'success');
         } else {
             // Crear
-            await crearNuevoProducto(datos);
+            await crearProducto(datos);
             mostrarAlerta('Éxito', 'Producto creado correctamente', 'success');
         }
 
