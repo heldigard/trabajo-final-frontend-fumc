@@ -163,7 +163,7 @@ function filtrarProductos() {
     productosFiltrados = productosGlobales.filter(producto => {
         // Filtro de búsqueda (nombre)
         // TODO: RETO 4 - Modifica esta línea para buscar también en descripción
-        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino) || producto.descripcion?.toLowerCase().includes(termino);
+        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino);
 
         // Filtro de categoría
         const cumpleCategoria = categoriaFiltro === 'todos' || producto.categoria === categoriaFiltro;
@@ -358,7 +358,7 @@ async function guardarProducto() {
     try {
         if (productoEnEdicion) {
             // Editar
-            await actualizarProducto(productoEnEdicion.id, datos);
+            await actualizarProductoCompleto(productoEnEdicion.id, datos);
             mostrarAlerta('Éxito', 'Producto actualizado correctamente', 'success');
         } else {
             // Crear
@@ -439,19 +439,20 @@ async function confirmarEliminarProducto(id) {
 
         // TODO: RETO 3 - Mejora este mensaje
         const confirmado = await mostrarConfirmacion(
-            'const mensaje = `¿Eliminar el producto?
+            '¿Eliminar producto?',
+            '¿Estás seguro de eliminar este producto?'
+        );
 
-        Nombre: ${ producto.nombre }
-        Precio: ${ formatearPrecio(producto.precio)
-    }
-        Stock: ${ producto.stock } unidades
-        ${ producto.stock > 0 ? '⚠️ Este producto aún tiene stock disponible' : '' } `;
-
-        const confirmado = await mostrarConfirmacion(mensaje);
-
-        if (!confirmado) {
-            return;
+        if (confirmado) {
+            await eliminarProducto(id);
+            mostrarAlerta('Éxito', 'Producto eliminado correctamente', 'success');
+            await cargarProductos();
         }
+
+    } catch (error) {
+        mostrarAlerta('Error', 'No se pudo eliminar el producto', 'error');
+    }
+}
 
 // ============================================
 // 🎯 RETO 6: EXPORTAR PRODUCTOS A CSV (⭐⭐⭐ Difícil - 45 min)
@@ -511,7 +512,7 @@ async function confirmarEliminarProducto(id) {
 //
 //     // Paso 2: Convertir cada producto a una línea CSV
 //     const lineas = productosFiltrados.map(p => {
-//         return `${ p.id }, "${p.nombre}", "${p.descripcion || ''}", ${ p.precio },${ p.stock }, "${p.categoria}", ${ p.activo ? 'Activo' : 'Inactivo' } `;
+//         return `${p.id},"${p.nombre}","${p.descripcion || ''}",${p.precio},${p.stock},"${p.categoria}",${p.activo ? 'Activo' : 'Inactivo'}`;
 //     }).join('\n');
 //
 //     // Paso 3: Combinar encabezados + líneas
@@ -526,7 +527,7 @@ async function confirmarEliminarProducto(id) {
 //     // Paso 6: Crear enlace temporal
 //     const enlace = document.createElement('a');
 //     enlace.href = url;
-//     enlace.download = `productos_${ new Date().toISOString().split('T')[0] }.csv`;
+//     enlace.download = `productos_${new Date().toISOString().split('T')[0]}.csv`;
 //
 //     // Paso 7: Simular clic para descargar
 //     document.body.appendChild(enlace);

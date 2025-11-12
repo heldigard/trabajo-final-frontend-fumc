@@ -358,7 +358,7 @@ async function guardarProducto() {
     try {
         if (productoEnEdicion) {
             // Editar
-            await actualizarProducto(productoEnEdicion.id, datos);
+            await actualizarProductoCompleto(productoEnEdicion.id, datos);
             mostrarAlerta('Éxito', 'Producto actualizado correctamente', 'success');
         } else {
             // Crear
