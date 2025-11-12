@@ -32,6 +32,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     configurarEventos();
 });
 
+// Alias solicitado desde el HTML (botón "Nuevo Cliente")
+function abrirModalNuevoCliente() {
+    abrirModalCrear();
+}
+
 function configurarEventos() {
     // Búsqueda
     const inputBusqueda = document.getElementById('buscar-cliente');
@@ -275,16 +280,6 @@ function crearFormularioCliente(cliente = null) {
 }
 
 // TODO: RETO 5 - Agregar función actualizarContadorNombre() aquí
-const inputNombre = document.getElementById('input-nombre');
-const contadorNombre = document.getElementById('contador-nombre');
-
-if (inputNombre && contadorNombre) {
-    inputNombre.addEventListener('input', () => {
-        const max = inputNombre.getAttribute('maxlength') || 100;
-        const len = inputNombre.value.length;
-        contadorNombre.textContent = `${len}/${max} caracteres`;
-    });
-}
 
 // ============================================
 // 7. MODAL EDITAR
@@ -346,6 +341,15 @@ async function guardarCliente() {
         mostrarAlerta('Error', error.message, 'error');
         return false;
     }
+}
+
+// Wrappers que conectan la página con el servicio de API
+async function crearNuevoCliente(datos) {
+    return crearCliente(datos);
+}
+
+async function actualizarCliente(id, datos) {
+    return actualizarClienteCompleto(id, datos);
 }
 
 // ============================================
