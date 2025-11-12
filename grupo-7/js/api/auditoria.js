@@ -62,10 +62,10 @@ async function manejarRespuesta(response) {
  * - id: ID de la auditoría
  * - tabla_afectada: 'productos' o 'clientes'
  * - operacion: 'CREATE', 'UPDATE', o 'DELETE'
- * - registro_id: ID del producto/cliente afectado
+ * - id_registro: ID del producto/cliente afectado
  * - datos_anteriores: JSON con los datos antes del cambio (null en CREATE)
  * - datos_nuevos: JSON con los datos después del cambio (null en DELETE)
- * - grupo_estudiantes: Nombre del grupo que hizo la operación
+ * - grupo_responsable: Nombre del grupo que hizo la operación
  * - fecha_operacion: Timestamp de cuándo ocurrió
  */
 async function obtenerTodoHistorial() {
@@ -227,13 +227,17 @@ async function obtenerEstadisticasAuditoria() {
         // Contar operaciones
         historial.forEach(registro => {
             // Por operación
-            estadisticas.porOperacion[registro.operacion]++;
+            if (estadisticas.porOperacion[registro.operacion] !== undefined) {
+                estadisticas.porOperacion[registro.operacion]++;
+            }
 
             // Por tabla
-            estadisticas.porTabla[registro.tabla_afectada]++;
+            if (estadisticas.porTabla[registro.tabla_afectada] !== undefined) {
+                estadisticas.porTabla[registro.tabla_afectada]++;
+            }
 
             // Por grupo
-            const grupo = registro.grupo_estudiantes;
+            const grupo = registro.grupo_responsable || 'SIN_GRUPO';
             if (!estadisticas.porGrupo[grupo]) {
                 estadisticas.porGrupo[grupo] = 0;
             }
