@@ -200,6 +200,49 @@
         // LÓGICA DEL DASHBOARD
         // ============================================
 
+        // Normaliza el nombre de un grupo para comparaciones insensibles a mayúsculas
+        const normalizarGrupo = (grupo) => (grupo || '').toString().trim().toUpperCase();
+
+        // Obtiene el nombre del grupo desde las posibles propiedades entregadas por el backend
+        const obtenerGrupoDeRegistro = (registro) => {
+            const grupo =
+                registro?.grupo_responsable ??
+                registro?.grupo_estudiantes ??
+                registro?.grupo ??
+                registro?.grupoResponsable ??
+                null;
+            return grupo || null;
+        };
+
+        // Obtiene el ID del registro afectado sin importar el nombre de la propiedad
+        const obtenerIdRegistro = (registro) => {
+            if (registro === null || registro === undefined) {
+                return null;
+            }
+
+            return (
+                registro.id_registro ??
+                registro.registro_id ??
+                registro.idRegistro ??
+                registro?.datos_nuevos?.id ??
+                null
+            );
+        };
+
+        // Evita mostrar valores undefined/null al usuario
+        const formatearCampo = (valor, fallback = '-') => {
+            if (valor === undefined || valor === null) {
+                return fallback;
+            }
+
+            const texto = String(valor).trim();
+            if (!texto || texto.toLowerCase() === 'undefined' || texto.toLowerCase() === 'null') {
+                return fallback;
+            }
+
+            return texto;
+        };
+
         /**
          * Carga todas las estadísticas del dashboard
          */
@@ -228,8 +271,14 @@
                 document.getElementById('clientes-activos').textContent = `${clientesActivos.length} activos`;
 
                 // Cargar auditoría
-                const historial = await obtenerTodoHistorial();
-                const operacionesGrupo = historial.filter(h => h.grupo_estudiantes === CONFIG.GRUPO_ESTUDIANTES);
+                const [historial, historialGrupo] = await Promise.all([
+                    obtenerTodoHistorial(),
+                    obtenerHistorialPorGrupo(CONFIG.GRUPO_ESTUDIANTES)
+                ]);
+                const operacionesGrupo = historialGrupo.filter((registro) => {
+                    const grupoRegistro = obtenerGrupoDeRegistro(registro);
+                    return normalizarGrupo(grupoRegistro) === normalizarGrupo(CONFIG.GRUPO_ESTUDIANTES);
+                });
 
                 document.getElementById('total-operaciones').textContent = historial.length;
                 document.getElementById('operaciones-grupo').textContent = `${operacionesGrupo.length} de tu grupo`;
@@ -249,15 +298,15 @@
             try {
                 contenedor.innerHTML = '<p class="text-center">Cargando...</p>';
 
-                const historial = await obtenerTodoHistorial();
+                const historialGrupo = await obtenerHistorialPorGrupo(CONFIG.GRUPO_ESTUDIANTES);
 
                 // Ordenar por fecha descendente y tomar las últimas 10
-                const ultimas = historial
+                const ultimas = historialGrupo
                     .sort((a, b) => new Date(b.fecha_operacion) - new Date(a.fecha_operacion))
                     .slice(0, 10);
 
                 if (ultimas.length === 0) {
-                    contenedor.innerHTML = '<p class="text-center" style="color: var(--texto-secundario);">No hay operaciones registradas aún.</p>';
+                    contenedor.innerHTML = '<p class="text-center" style="color: var(--texto-secundario);">No hay operaciones registradas aún para tu grupo.</p>';
                     return;
                 }
 
@@ -284,14 +333,18 @@
                         'UPDATE': 'var(--color-info)',
                         'DELETE': 'var(--color-peligro)'
                     };
+                    const grupo = formatearCampo(obtenerGrupoDeRegistro(op), 'Sin grupo');
+                    const tabla = formatearCampo(op.tabla_afectada, 'Sin tabla');
+                    const operacion = formatearCampo(op.operacion, 'N/D');
+                    const idRegistro = formatearCampo(obtenerIdRegistro(op), '-');
 
                     html += `
                         <tr>
                             <td>${fecha}</td>
-                            <td>${op.grupo_estudiantes}</td>
-                            <td>${op.tabla_afectada}</td>
-                            <td><span style="color: ${colorOperacion[op.operacion]}; font-weight: bold;">${op.operacion}</span></td>
-                            <td>${op.registro_id}</td>
+                            <td>${grupo}</td>
+                            <td>${tabla}</td>
+                            <td><span style="color: ${colorOperacion[operacion] || 'var(--texto-principal)'}; font-weight: bold;">${operacion}</span></td>
+                            <td>${idRegistro}</td>
                         </tr>
                     `;
                 });
