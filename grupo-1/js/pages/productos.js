@@ -117,53 +117,18 @@ function buscarProducto() {
  * 1. Encuentra la línea que dice: producto.nombre?.toLowerCase().includes(termino)
  * 2. Agrega el operador OR (||) para buscar TAMBIÉN en la descripción
  * 3. Usa optional chaining (?.) para evitar errores si descripcion es null
- *
- * CÓDIGO ACTUAL:
- * producto.nombre?.toLowerCase().includes(termino)
- *
- * CÓDIGO MEJORADO:
- * producto.nombre?.toLowerCase().includes(termino) ||
- * producto.descripcion?.toLowerCase().includes(termino)
- *
- * ¿QUÉ ES OPTIONAL CHAINING (?.)?
- * - Es una forma segura de acceder a propiedades que pueden no existir
- * - Si la propiedad es null o undefined, devuelve undefined en lugar de error
- * - Ejemplo: producto.descripcion?.toLowerCase()
- *   → Si descripcion es null, no da error, solo devuelve undefined
- *
- * ¿QUÉ ES EL OPERADOR OR (||)?
- * - Devuelve true si CUALQUIERA de las condiciones es verdadera
- * - Ejemplo: condicion1 || condicion2
- *   → true si condicion1 ES VERDADERA O condicion2 ES VERDADERA
- *
- * EJEMPLO PRÁCTICO:
- * Producto: { nombre: "Laptop", descripcion: "Laptop HP para programación" }
- *
- * Búsqueda "HP":
- * - CON CÓDIGO ACTUAL: No encuentra nada (solo busca en nombre)
- * - CON CÓDIGO MEJORADO: ✅ Encuentra el producto (busca en descripción también)
- *
- * PISTAS:
- * 💡 PISTA 1: El operador || se escribe con dos barras verticales (tecla AltGr + 1)
- * 💡 PISTA 2: Copia exactamente la estructura: producto.nombre?.toLowerCase().includes(termino)
- * 💡 PISTA 3: Luego agrega || y repite con descripcion en lugar de nombre
- * 💡 PISTA 4: No olvides el optional chaining (?.) en descripcion también
- *
- * CRITERIOS DE ACEPTACIÓN:
- * ✅ Si busco "Laptop", encuentra productos con "Laptop" en nombre
- * ✅ Si busco "HP", encuentra productos con "HP" en descripción
- * ✅ Si busco "programación", encuentra productos con esa palabra en descripción
- * ✅ No da error si un producto tiene descripcion = null
  */
+
 function filtrarProductos() {
     const termino = document.getElementById('busqueda-producto')?.value.toLowerCase() || '';
     const categoriaFiltro = document.getElementById('filtro-categoria')?.value || 'todos';
     const estadoFiltro = document.getElementById('filtro-estado')?.value || 'todos';
 
     productosFiltrados = productosGlobales.filter(producto => {
-        // Filtro de búsqueda (nombre)
-        // TODO: RETO 4 - Modifica esta línea para buscar también en descripción
-        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino);
+        // Filtro de búsqueda (nombre y descripción)
+        const cumpleBusqueda = !termino || 
+            producto.nombre?.toLowerCase().includes(termino) || 
+            producto.descripcion?.toLowerCase().includes(termino);
 
         // Filtro de categoría
         const cumpleCategoria = categoriaFiltro === 'todos' || producto.categoria === categoriaFiltro;
@@ -414,25 +379,27 @@ async function guardarProducto() {
  * 💡 PISTA 3: Usa ${formatearPrecio(producto.precio)} para el precio
  * 💡 PISTA 4: Usa operador ternario para mostrar advertencia condicional:
  *             ${producto.stock > 0 ? '⚠️ Este producto aún tiene stock' : ''}
- *
- * CÓDIGO DE REFERENCIA:
- * ```javascript
- * const mensaje = `¿Eliminar el producto?
- *
- * Nombre: ${producto.nombre}
- * Precio: ${formatearPrecio(producto.precio)}
- * Stock: ${producto.stock} unidades
- *
- * ${producto.stock > 0 ? '⚠️ Este producto aún tiene stock disponible' : ''}`;
- * ```
- *
- * CRITERIOS DE ACEPTACIÓN:
- * ✅ El mensaje muestra el nombre del producto
- * ✅ El mensaje muestra el precio formateado
- * ✅ El mensaje muestra el stock
- * ✅ Si stock > 0, muestra advertencia
- * ✅ Si stock = 0, NO muestra advertencia
  */
+
+function generarMensajeProducto(producto) {
+    return `
+Nombre: ${producto.nombre}
+Precio: ${formatearPrecio(producto.precio)}
+Stock: ${producto.stock} unidades
+
+${producto.stock > 0 ? '⚠️ Este producto aún tiene stock disponible' : ''}
+`;
+}
+
+// Ejemplo de uso:
+const producto = {
+    nombre: "Laptop",
+    precio: 1500,
+    stock: 10
+};
+
+console.log(generarMensajeProducto(producto));
+
 async function confirmarEliminarProducto(id) {
     try {
         const producto = await obtenerProductoPorId(id);

@@ -37,12 +37,13 @@
  * 3. currency: 'COP' → Peso colombiano
  *
  * EJEMPLOS DE USO:
- * ```javascript
- * formatearPrecio(2500000);  // "$2.500.000"
- * formatearPrecio(1000);     // "$1.000"
- * formatearPrecio(0);        // "$0"
- * ```
- *
+ */
+
+formatearPrecio(2500000);  // "$2.500.000"
+formatearPrecio(1000);     // "$1.000"
+formatearPrecio(0);        // "$0"
+
+ /*
  * EJERCICIO PARA PRACTICAR:
  * 1. Abre la consola del navegador (F12)
  * 2. Copia esta función completa

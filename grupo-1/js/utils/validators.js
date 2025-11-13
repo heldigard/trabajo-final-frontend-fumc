@@ -37,14 +37,6 @@
  * 💡 PISTA 2: El operador < compara si un número es menor que otro
  * 💡 PISTA 3: El método .push() agrega un elemento al array de errores
  * 💡 PISTA 4: El mensaje debe ser claro para el usuario
- *
- * CÓDIGO COMPLETO (solo debes descomentarlo):
- * ```javascript
- * if (isNaN(datos.stock) || datos.stock < 0) {
- *     errores.push('El stock no puede ser negativo');
- * }
- * ```
- *
  * CRITERIOS DE ACEPTACIÓN:
  * ✅ Si escribo stock = -5, debe mostrar alerta
  * ✅ Si escribo stock = 0, NO debe mostrar alerta (0 es válido)
@@ -68,9 +60,9 @@ function validarDatosProducto(datos) {
     }
 
     // TODO: RETO 1 - Descomenta las siguientes 3 líneas:
-    // if (isNaN(datos.stock) || datos.stock < 0) {
-    //     errores.push('El stock no puede ser negativo');
-    // }
+    if (isNaN(datos.stock) || datos.stock < 0) {
+    errores.push('El stock no puede ser negativo');
+    }
 
     // Validar categoría
     if (!datos.categoria || datos.categoria === '') {
