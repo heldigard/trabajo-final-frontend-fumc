@@ -163,7 +163,8 @@ function filtrarProductos() {
     productosFiltrados = productosGlobales.filter(producto => {
         // Filtro de búsqueda (nombre)
         // TODO: RETO 4 - Modifica esta línea para buscar también en descripción
-        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino);
+        const cumpleBusqueda = !termino || producto.nombre?.toLowerCase().includes(termino) ||
+        producto.descripcion?.toLowerCase().includes(termino);
 
         // Filtro de categoría
         const cumpleCategoria = categoriaFiltro === 'todos' || producto.categoria === categoriaFiltro;
@@ -337,6 +338,7 @@ async function abrirModalEditar(id) {
 /**
  * Guarda un producto (crear o editar)
  */
+
 async function guardarProducto() {
     // Obtener datos del formulario
     const datos = {
@@ -440,7 +442,7 @@ async function confirmarEliminarProducto(id) {
         // TODO: RETO 3 - Mejora este mensaje
         const confirmado = await mostrarConfirmacion(
             '¿Eliminar producto?',
-            '¿Estás seguro de eliminar este producto?'
+            '¿Estás seguro de ésto, ultima palabra... digo, definitivamente?'
         );
 
         if (confirmado) {
@@ -506,36 +508,36 @@ async function confirmarEliminarProducto(id) {
  * Descomenta todo el código a continuación:
  */
 
-// function exportarProductosCSV() {
-//     // Paso 1: Crear encabezados del CSV
-//     const encabezados = 'ID,Nombre,Descripción,Precio,Stock,Categoría,Estado\n';
-//
-//     // Paso 2: Convertir cada producto a una línea CSV
-//     const lineas = productosFiltrados.map(p => {
-//         return `${p.id},"${p.nombre}","${p.descripcion || ''}",${p.precio},${p.stock},"${p.categoria}",${p.activo ? 'Activo' : 'Inactivo'}`;
-//     }).join('\n');
-//
-//     // Paso 3: Combinar encabezados + líneas
-//     const csv = encabezados + lineas;
-//
-//     // Paso 4: Crear un Blob (archivo en memoria)
-//     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-//
-//     // Paso 5: Crear URL de descarga
-//     const url = URL.createObjectURL(blob);
-//
-//     // Paso 6: Crear enlace temporal
-//     const enlace = document.createElement('a');
-//     enlace.href = url;
-//     enlace.download = `productos_${new Date().toISOString().split('T')[0]}.csv`;
-//
-//     // Paso 7: Simular clic para descargar
-//     document.body.appendChild(enlace);
-//     enlace.click();
-//
-//     // Paso 8: Limpiar
-//     document.body.removeChild(enlace);
-//     URL.revokeObjectURL(url);
-//
-//     mostrarAlerta('Éxito', 'Productos exportados correctamente', 'success');
-// }
+function exportarProductosCSV() {
+    // Paso 1: Crear encabezados del CSV
+    const encabezados = 'ID,Nombre,Descripción,Precio,Stock,Categoría,Estado\n';
+
+    // Paso 2: Convertir cada producto a una línea CSV
+    const lineas = productosFiltrados.map(p => {
+        return `${p.id},"${p.nombre}","${p.descripcion || ''}",${p.precio},${p.stock},"${p.categoria}",${p.activo ? 'Activo' : 'Inactivo'}`;
+    }).join('\n');
+
+    // Paso 3: Combinar encabezados + líneas
+    const csv = encabezados + lineas;
+
+    // Paso 4: Crear un Blob (archivo en memoria)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+    // Paso 5: Crear URL de descarga
+    const url = URL.createObjectURL(blob);
+
+    // Paso 6: Crear enlace temporal
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = `productos_${new Date().toISOString().split('T')[0]}.csv`;
+
+    // Paso 7: Simular clic para descargar
+    document.body.appendChild(enlace);
+    enlace.click();
+
+    // Paso 8: Limpiar
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
+
+    mostrarAlerta('Éxito', 'Productos exportados correctamente', 'success');
+}
