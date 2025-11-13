@@ -341,46 +341,6 @@ async function guardarProducto() {
         return false;
     }
 }
-
-// ============================================
-// 🎯 RETO 3: MEJORAR CONFIRMACIÓN AL ELIMINAR (⭐ Fácil - 20 min)
-// ============================================
-
-/**
- * Confirma antes de eliminar un producto
- *
- * OBJETIVO:
- * Mejorar el mensaje de confirmación para que muestre más información
- * del producto que se va a eliminar (nombre, precio, stock).
- *
- * INSTRUCCIONES:
- * 1. Encuentra la llamada a mostrarConfirmacion() más abajo
- * 2. Modifica el mensaje para incluir:
- *    - Nombre del producto
- *    - Precio formateado
- *    - Stock disponible
- *    - Advertencia si tiene stock > 0
- *
- * MENSAJE ACTUAL:
- * "¿Estás seguro de eliminar este producto?"
- *
- * MENSAJE MEJORADO (ejemplo):
- * "¿Eliminar el producto?
- *
- * Nombre: Laptop HP
- * Precio: $2.500.000
- * Stock: 10 unidades
- *
- * ⚠️ Este producto aún tiene stock disponible"
- *
- * PISTAS:
- * 💡 PISTA 1: Usa template literals (comillas invertidas) para texto multilínea
- * 💡 PISTA 2: Usa ${producto.nombre} para insertar el nombre
- * 💡 PISTA 3: Usa ${formatearPrecio(producto.precio)} para el precio
- * 💡 PISTA 4: Usa operador ternario para mostrar advertencia condicional:
- *             ${producto.stock > 0 ? '⚠️ Este producto aún tiene stock' : ''}
- */
-
 function generarMensajeProducto(producto) {
     return `
 Nombre: ${producto.nombre}
@@ -473,36 +433,36 @@ async function confirmarEliminarProducto(id) {
  * Descomenta todo el código a continuación:
  */
 
-// function exportarProductosCSV() {
-//     // Paso 1: Crear encabezados del CSV
-//     const encabezados = 'ID,Nombre,Descripción,Precio,Stock,Categoría,Estado\n';
-//
-//     // Paso 2: Convertir cada producto a una línea CSV
-//     const lineas = productosFiltrados.map(p => {
-//         return `${p.id},"${p.nombre}","${p.descripcion || ''}",${p.precio},${p.stock},"${p.categoria}",${p.activo ? 'Activo' : 'Inactivo'}`;
-//     }).join('\n');
-//
-//     // Paso 3: Combinar encabezados + líneas
-//     const csv = encabezados + lineas;
-//
-//     // Paso 4: Crear un Blob (archivo en memoria)
-//     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-//
-//     // Paso 5: Crear URL de descarga
-//     const url = URL.createObjectURL(blob);
-//
-//     // Paso 6: Crear enlace temporal
-//     const enlace = document.createElement('a');
-//     enlace.href = url;
-//     enlace.download = `productos_${new Date().toISOString().split('T')[0]}.csv`;
-//
-//     // Paso 7: Simular clic para descargar
-//     document.body.appendChild(enlace);
-//     enlace.click();
-//
-//     // Paso 8: Limpiar
-//     document.body.removeChild(enlace);
-//     URL.revokeObjectURL(url);
-//
-//     mostrarAlerta('Éxito', 'Productos exportados correctamente', 'success');
-// }
+function exportarProductosCSV() {
+     // Paso 1: Crear encabezados del CSV
+    const encabezados = 'ID,Nombre,Descripción,Precio,Stock,Categoría,Estado\n';
+
+     // Paso 2: Convertir cada producto a una línea CSV
+    const lineas = productosFiltrados.map(p => {
+        return `${p.id},"${p.nombre}","${p.descripcion || ''}",${p.precio},${p.stock},"${p.categoria}",${p.activo ? 'Activo' : 'Inactivo'}`;
+    }).join('\n');
+
+     // Paso 3: Combinar encabezados + líneas
+    const csv = encabezados + lineas;
+
+     // Paso 4: Crear un Blob (archivo en memoria)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+     // Paso 5: Crear URL de descarga
+    const url = URL.createObjectURL(blob);
+
+     // Paso 6: Crear enlace temporal
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = `productos_${new Date().toISOString().split('T')[0]}.csv`;
+
+     // Paso 7: Simular clic para descargar
+    document.body.appendChild(enlace);
+    enlace.click();
+
+     // Paso 8: Limpiar
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
+
+    mostrarAlerta('Éxito', 'Productos exportados correctamente', 'success');
+}

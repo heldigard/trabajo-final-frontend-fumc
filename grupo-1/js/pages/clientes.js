@@ -231,8 +231,12 @@ function crearFormularioCliente(cliente = null) {
     return `
         <div class="form-group">
             <label for="nombre">Nombre Completo *</label>
-            <input type="text" id="nombre" class="form-control"
-                   value="${cliente?.nombre || ''}" required>
+        <input type="text" id="nombre" class="form-control"
+        maxlength="100"
+        oninput="actualizarContadorNombre(this)">
+        <span id="contador-nombre" style="font-size: 0.9rem; color: var(--texto-secundario);">
+        0/100 caracteres
+        </span>
             <!-- TODO: RETO 5 - Agregar contador de caracteres aquí -->
         </div>
 
@@ -280,6 +284,14 @@ function crearFormularioCliente(cliente = null) {
 }
 
 // TODO: RETO 5 - Agregar función actualizarContadorNombre() aquí
+function actualizarContadorNombre(input) {
+    const contador = document.getElementById('contador-nombre');
+    const longitud = input.value.length;
+    contador.textContent = `${longitud}/100 caracteres`;
+    contador.style.color = longitud > 80 ? 'var(--rojo)' : 'var(--texto-secundario)';
+}
+
+
 
 // ============================================
 // 7. MODAL EDITAR
