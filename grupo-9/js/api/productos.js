@@ -309,16 +309,16 @@ async function crearProducto(producto) {
   try {
     mostrarSpinnerGlobal(true);
 
-    // TODO: RETO 7 - Parte 1: Crear copia del producto con spread operator
-    // const productoConFirma = { ...producto };
+   // TODO: RETO 7 - Parte 1: Crear copia del producto con spread operator
+    const productoConFirma = { ...producto };
 
-    // TODO: RETO 7 - Parte 2: Agregar firma a la descripción
-    // productoConFirma.descripcion = `${producto.descripcion || ''} [Creado por ${CONFIG.GRUPO_ESTUDIANTES}]`;
+    //TODO: RETO 7 - Parte 2: Agregar firma a la descripción
+    productoConFirma.descripcion = `${producto.descripcion || ''} [Creado por ${CONFIG.GRUPO_ESTUDIANTES}]`;
 
-    // TODO: RETO 7 - Parte 3 (OPCIONAL): Verificar longitud máxima
-    // if (productoConFirma.descripcion.length > 250) {
-    //     productoConFirma.descripcion = productoConFirma.descripcion.substring(0, 250);
-    // }
+   // TODO: RETO 7 - Parte 3 (OPCIONAL): Verificar longitud máxima
+    if (productoConFirma.descripcion.length > 250) {
+        productoConFirma.descripcion = productoConFirma.descripcion.substring(0, 250);
+    }
 
     const response = await fetch(buildURL('/productos/'), {
       method: 'POST',
@@ -326,7 +326,7 @@ async function crearProducto(producto) {
         'Content-Type': 'application/json',
       },
       // TODO: RETO 7 - Parte 4: Cambiar 'producto' por 'productoConFirma'
-      body: JSON.stringify(producto),
+      body: JSON.stringify(productoConFirma),
       signal: AbortSignal.timeout(CONFIG.TIMEOUT),
     });
 
@@ -408,7 +408,7 @@ async function crearProducto(producto) {
  * ✅ La descripción no excede 250 caracteres
  * ✅ Los cambios se guardan correctamente
  */
-async function actualizarProductoCompleto(id, producto) {
+async function actualizarProductoCompleto(id, productoConFirma) {
   try {
     mostrarSpinnerGlobal(true);
 
@@ -420,7 +420,7 @@ async function actualizarProductoCompleto(id, producto) {
         'Content-Type': 'application/json',
       },
       // TODO: RETO 7 - Cambiar 'producto' por 'productoConFirma'
-      body: JSON.stringify(producto),
+      body: JSON.stringify(productoConFirma),
       signal: AbortSignal.timeout(CONFIG.TIMEOUT),
     });
 
